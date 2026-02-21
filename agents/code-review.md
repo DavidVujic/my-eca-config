@@ -16,6 +16,7 @@ Precondition (required):
 - If the skill returns `error: "NO_DIFF_FOUND"`, output exactly:
   {"status":"no_changes"}
   and stop.
+- Load `fp-idiomatic-style` and apply it only when writing the fix field.
 
 Review scope:
 - Only comment on added/modified lines in the diff (lines starting with `+`), not unchanged context.
