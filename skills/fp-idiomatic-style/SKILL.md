@@ -1,6 +1,6 @@
 ---
-name: fp-idiomatic-style
-description: Coding style policy for generated code: prefer idiomatic language conventions with a functional-leaning approach (pure-ish functions, composability), and prefer lightweight data structures over dataclasses/pydantic unless clearly justified.
+name: "fp-idiomatic-style"
+description: "Coding style policy for generated code: prefer idiomatic language conventions with a functional-leaning approach (pure-ish functions, composability), and prefer lightweight data structures over dataclasses/pydantic unless clearly justified."
 ---
 
 # Functional-leaning, idiomatic coding style policy
