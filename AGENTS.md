@@ -10,3 +10,6 @@ When the user asks for a 5 Whys analysis, use the `five-whys` subagent configure
 
 ## Changes summary instructions
 When the user asks for a changes summary, use the `changes-summary` subagent configured in `agents/changes-summary.md`.
+
+## Pull Request instructions
+When the user asks to make a pull request, use the `pull-request` subagent configured in `agents/pull-request.md`.

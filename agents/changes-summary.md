@@ -18,22 +18,17 @@ The summary must be no more than three sentences. If possible, make it a single,
 Example of an undesired output:
 "Updated login.js, added new function to handle tokens, and fixed a typo in a comment."
 
-CHANGES CONTEXT REQUIREMENT:
+CHANGES CONTEXT:
 
-You MUST load and execute the skill `git-changes-context` via the eca__skill tool
-before performing any review.
-
-The review is INVALID unless DIFF_CONTEXT was obtained from that skill in this session.
+Before generating the summary, load and execute the `git-changes-context` skill to obtain `diff_context`.
 
 If the skill returns:
 {
   "error": "NO_DIFF_FOUND"
 }
-
-Then return:
-
-{
-  "status": "no_changes"
-}
-
+then output exactly:
+{"status":"no_changes"}
 and stop.
+
+Base the summary strictly on the returned diff.
+Do not assume intent beyond what can reasonably be inferred from the changes.
