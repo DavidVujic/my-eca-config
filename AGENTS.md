@@ -13,3 +13,6 @@ When the user asks for a changes summary, use the `changes-summary` subagent con
 
 ## Pull Request instructions
 When the user asks to make a pull request, use the `pull-request` subagent configured in `agents/pull-request.md`.
+
+## Implementation instructions
+When the user asks to implement a plan, write code, refactor, or apply changes, use the `implement` subagent configured in `agents/implement.md`.
