@@ -1,3 +1,8 @@
+---
+name: planning-style
+description: "Produce an implementation plan with a functional-leaning, idiomatic style mindset; prefers lightweight data structures over dataclasses/pydantic unless justified."
+---
+
 # Plan Skill
 
 Produce an implementation plan with a functional-leaning, idiomatic style mindset; prefers lightweight data structures over dataclasses/pydantic unless justified.
