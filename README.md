@@ -1,6 +1,6 @@
 # My Eca config
 
-Shareable ECA (Editor Code Assistant) configuration focused on agent orchestration, subagents, and reusable skills.
+Shareable Eca (Editor Code Assistant) configuration focused on agent orchestration, subagents, and reusable skills.
 
 Contents
 - `AGENTS.md` — human-readable definitions for agents, their responsibilities, and global guidance for use.
