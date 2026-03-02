@@ -7,4 +7,4 @@ Contents
 - `agents/` — subagent configurations with task-specific instructions and expected outputs.
 - `skills/` — small, repeatable procedures that agents invoke to perform specialized work.
 
-The purpose is to provide a compact, explicit blueprint for running agent-driven workflows and for reusing those patterns in Eca or your favorite tool.
+The purpose is to provide a compact blueprint for running agent-driven workflows in your favorite tool (in case that wouldn't be Eca).
