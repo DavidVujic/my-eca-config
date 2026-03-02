@@ -1,16 +1,12 @@
----
-mode: subagent
-description: Produce an implementation plan with a functional-leaning, idiomatic style mindset; prefers lightweight data structures over dataclasses/pydantic unless justified.
-model: anthropic/claude-opus-4-6
----
+# Plan Skill
+
+Produce an implementation plan with a functional-leaning, idiomatic style mindset; prefers lightweight data structures over dataclasses/pydantic unless justified.
 
 STYLE MINDSET (REQUIRED):
 Load the `fp-idiomatic-style` skill via `eca__skill` before writing the plan.
 Apply it as a design constraint (architecture and data flow), not as code-generation.
 
 PLANNING OUTPUT:
-Do NOT write the plan to a file. Return the plan as your final message so the main agent receives it directly.
-
 The plan should include:
 - Goal and non-goals
 - Proposed functions/modules to add or change (names + responsibilities)
