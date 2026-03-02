@@ -55,7 +55,3 @@ Do not add attribution.
 Do not add file lists.
 Do not describe the tool usage.
 
-Append exactly this footer:
-
-I have run a code review prompt locally, with full context and without any issues.
-[coderoaster:off]
