@@ -1,33 +1,40 @@
 {
   "defaultModel": "anthropic/claude-opus-4-6",
-  "providers" : {
-    "anthropic" : {
-      "keyRc" : "api.anthropic.com",
-      "models" : {
-        "claude-opus-4-6": { },
-	"anthropic/claude-sonnet-4-5": { }
+  "providers": {
+    "anthropic": {
+      "keyRc": "api.anthropic.com",
+      "models": {
+        "claude-opus-4-6": {},
+        "anthropic/claude-sonnet-4-5": {}
       }
     },
-    "google" : {
-      "keyRc" : "generativelanguage.googleapis.com",
-      "models" : {
-        "gemini-2.5-flash": { },
-        "gemini-3-flash-preview": { },
-	"gemini-3-pro-preview": { }
+    "google": {
+      "keyRc": "generativelanguage.googleapis.com",
+      "models": {
+        "gemini-2.5-flash": {},
+        "gemini-3-flash-preview": {},
+        "gemini-3-pro-preview": {}
       }
     },
     "openai": {
       "keyRc": "api.openai.com",
       "models": {
-        "gpt-4.1": { },
-        "gpt-5-mini": { }
+        "gpt-4.1": {},
+        "gpt-5-mini": {}
       }
     }
   },
   "toolCall": {
     "approval": {
-       "deny": {
-        "eca__read_file": {"argsMatchers": {"path": [".*/\\.env$", ".*/secrets\\.env$"]}}
+      "deny": {
+        "eca__read_file": {
+          "argsMatchers": {
+            "path": [
+              ".*/\\.env$",
+              ".*/secrets\\.env$"
+            ]
+          }
+        }
       }
     }
   }
