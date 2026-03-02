@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Facilitate a 5 Whys incident/ticket analysis in short dialogue.
-model: openai/gpt-5-mini
+model: anthropic/claude-sonnet-4-5
 ---
 # Five Whys playbook
 

@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Summarize a git diff in <= 3 sentences focusing on what and why.
-model: openai/gpt-5-mini
+model: anthropic/claude-sonnet-4-5
 ---
 # Changes summary playbook
 

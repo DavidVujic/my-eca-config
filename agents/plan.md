@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Produce an implementation plan with a functional-leaning, idiomatic style mindset; prefers lightweight data structures over dataclasses/pydantic unless justified.
-model: gpt-4.1
+model: anthropic/claude-opus-4-6
 ---
 
 STYLE MINDSET (REQUIRED):
