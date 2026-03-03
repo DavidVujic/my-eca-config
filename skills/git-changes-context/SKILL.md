@@ -1,6 +1,6 @@
 ---
 name: git-changes-context
-description: Reliably obtain a non-empty unified git diff for the current work using safe fallbacks (git diff, origin/master...HEAD, origin/main...HEAD) and return structured JSON containing the diff and the command used.
+description: Reliably obtain a non-empty unified git diff for the current branch using safe fallbacks (origin/HEAD...HEAD, origin/main...HEAD, origin/master...HEAD) and return structured JSON containing the diff and the command used.
 ---
 
 # Git Changes Context Skill
@@ -18,48 +18,41 @@ This skill MUST be used whenever a task depends on reviewing changes.
 
 Follow these steps strictly and in order.
 
-### Step 1 — Working tree diff
+**Important:** You MUST attempt *every* step below until you find a **non-empty** diff.
+Do **not** return `NO_DIFF_FOUND` after running only one command.
+
+For each step:
+- Run the command exactly as written.
+- If the command errors **or** produces empty output, proceed to the next step.
+- If output is non-empty, set `diff_source_command` to the exact command string, set `diff_context` to the raw unified diff, and stop.
+
+### Step 1 — Compare against origin/HEAD (preferred default-branch fallback)
 
 Run:
 
-    git diff
-
-If output is non-empty:
-- Set `diff_source_command = "git diff"`
-- Set `diff_context = <raw unified diff>`
-- Stop.
+    git diff origin/HEAD...HEAD
 
 ---
 
-### Step 2 — Compare against origin/master
-
-Run:
-
-    git diff origin/master...HEAD
-
-If output is non-empty:
-- Set `diff_source_command = "git diff origin/master...HEAD"`
-- Set `diff_context = <raw unified diff>`
-- Stop.
-
----
-
-### Step 3 — Compare against origin/main
+### Step 2 — Compare against origin/main
 
 Run:
 
     git diff origin/main...HEAD
 
-If output is non-empty:
-- Set `diff_source_command = "git diff origin/main...HEAD"`
-- Set `diff_context = <raw unified diff>`
-- Stop.
+---
+
+### Step 3 — Compare against origin/master
+
+Run:
+
+    git diff origin/master...HEAD
 
 ---
 
 ## Failure Condition
 
-If ALL of the above produce empty output:
+If ALL of the above steps either error **or** produce empty output:
 
 Return:
 
