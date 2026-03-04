@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Review a git diff / PR with strict severity threshold and JSON-only output.
-model: anthropic/claude-sonnet-4-5
+model: google/gemini-3.1-pro-preview
 ---
 # Code review playbook
 
