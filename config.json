@@ -13,13 +13,13 @@
       "models": {
         "gemini-2.5-flash": {},
         "gemini-3-flash-preview": {},
-        "gemini-3-pro-preview": {}
+        "gemini-3.1-pro-preview": {}
       }
     },
     "openai": {
       "keyRc": "api.openai.com",
       "models": {
-        "gpt-4.1": {},
+        "gpt-5.2": {},
         "gpt-5-mini": {}
       }
     }
