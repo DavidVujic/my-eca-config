@@ -19,8 +19,19 @@
     "openai": {
       "keyRc": "api.openai.com",
       "models": {
-        "gpt-5.2": {},
-        "gpt-5-mini": {}
+        "gpt-5-mini": {},
+        "gpt-5.2": {}
+      }
+    },
+    "mistral": {
+      "api": "openai-chat",
+      "url": "https://api.mistral.ai/v1",
+      "keyRc": "api.mistral.ai",
+      "models": {
+        "mistral-small": {"extraPayload": { "max_completion_tokens": null}},
+        "mistral-medium": {"extraPayload": { "max_completion_tokens": null}},
+        "mistral-large-latest": {"extraPayload": { "max_completion_tokens": null}},
+        "codestral-latest": {"extraPayload": { "max_completion_tokens": null}}
       }
     }
   },
