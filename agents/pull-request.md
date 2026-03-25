@@ -3,7 +3,6 @@ mode: subagent
 description: Create a pull request for the current feature branch.
 model: anthropic/claude-sonnet-4-5
 ---
-
 # Pull request playbook
 
 Use this playbook whenever the user asks for a code review (diff/PR/repo review).
