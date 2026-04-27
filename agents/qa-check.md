@@ -1,11 +1,11 @@
 ---
 mode: subagent
 description: Run linting and unit tests against the current repository, auto-discovering the correct commands.
-model: anthropic/claude-sonnet-4-5
+model: anthropic/claude-sonnet-4-6
 ---
 # QA check playbook
 
-Use this playbook after an agent produces or modifies code.
+Use this playbook when the user asks for a check of produced or modified code.
 
 ## QA check instructions
 

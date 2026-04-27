@@ -22,4 +22,4 @@ When the user asks to create a commit or uses the `/commit` command, use the `co
 When the user asks to implement a plan, write code, refactor, or apply changes, use the `implement` subagent configured in `agents/implement.md`.
 
 ## QA check instructions
-After an agent produces or modifies code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete.
+When the user asks to check the changes of code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete.
