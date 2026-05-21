@@ -1,11 +1,12 @@
 {
-  "defaultModel": "anthropic/claude-opus-4-6",
+  "defaultModel": "anthropic/claude-opus-4-7",
   "providers": {
     "anthropic": {
       "keyRc": "api.anthropic.com",
       "models": {
+        "claude-opus-4-7": {},
         "claude-opus-4-6": {},
-        "anthropic/claude-sonnet-4-5": {}
+        "anthropic/claude-sonnet-4-6": {}
       }
     },
     "google": {
@@ -37,6 +38,34 @@
   },
   "toolCall": {
     "approval": {
+      "byDefault": "ask",
+      "allow": {
+        "eca__git": {
+          "argsMatchers": {
+            "command": [
+              "^git\\s+status(\\s|$)",
+              "^git\\s+diff(?!.*--no-index)(\\s|$)"
+            ]
+          }
+        },
+        "codescene__explain_code_health": {},
+        "codescene__explain_code_health_productivity": {},
+        "codescene__code_health_review": {},
+        "codescene__code_health_score": {},
+        "codescene__pre_commit_code_health_safeguard": {},
+        "codescene__analyze_change_set": {},
+        "codescene__code_health_refactoring_business_case": {},
+        "codescene__code_health_auto_refactor": {},
+        "codescene__get_config": {},
+        "codescene__code_ownership_for_path": {},
+        "chiasmus__chiasmus_graph": {},
+        "chiasmus__chiasmus_map": {},
+        "chiasmus__chiasmus_skills": {},
+        "chiasmus__chiasmus_formalize": {},
+        "chiasmus__chiasmus_verify": {},
+        "chiasmus__chiasmus_lint": {},
+        "chiasmus__chiasmus_review": {}
+      },
       "deny": {
         "eca__read_file": {
           "argsMatchers": {
@@ -45,8 +74,22 @@
               ".*/secrets\\.env$"
             ]
           }
-        }
+        },
+        "chiasmus__chiasmus_solve": {},
+        "chiasmus__chiasmus_learn": {},
+        "chiasmus__chiasmus_search": {}
       }
+    }
+  },
+  "mcpServers": {
+    "chiasmus": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "chiasmus"]
+    },
+    "codescene": {
+      "command": "cs-mcp"
     }
   }
 }
+

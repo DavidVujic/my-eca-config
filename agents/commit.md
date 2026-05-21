@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Create a conventional commit from staged changes with a diff-derived description.
-model: anthropic/claude-sonnet-4-5
+model: anthropic/claude-sonnet-4-6
 ---
 # Commit playbook
 
