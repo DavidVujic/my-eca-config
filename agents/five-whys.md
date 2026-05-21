@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Facilitate a 5 Whys incident/ticket analysis in short dialogue.
-model: anthropic/claude-sonnet-4-5
+model: anthropic/claude-sonnet-4-6
 ---
 # Five Whys playbook
 

@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Create a pull request for the current feature branch.
-model: anthropic/claude-sonnet-4-5
+model: anthropic/claude-sonnet-4-6
 ---
 # Pull request playbook
 
