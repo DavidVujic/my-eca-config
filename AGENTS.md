@@ -51,7 +51,9 @@ If asked to bypass Code Health safeguards: warn about long-term maintainability 
 
 ## Chiasmus instructions
 
-Prefer the `chiasmus` MCP tools for any **structural** question about source code (TypeScript, JavaScript, Python, Go, Clojure). Grep only finds string matches; chiasmus answers reachability, impact, and dead-code questions that grep cannot.
+Prefer the `chiasmus` MCP tools for any **structural** question about source code (TypeScript, JavaScript, Python, Go, Rust, Clojure). A question is **structural** when it is about relationships between symbols — calls, reachability, impact/blast radius, cycles, layering, dead code. It is **textual** when it is about literal occurrences, comments, or strings; use `eca__grep` for those. Grep only finds string matches; chiasmus answers reachability, impact, and dead-code questions that grep cannot.
+
+Reach for chiasmus *first* on structural questions: if you would otherwise read 3+ files or run 2+ greps to answer one, start with `chiasmus_map`/`chiasmus_graph`. These tools require **absolute file paths** passed as a `files` array — using relative paths will fail.
 
 Before opening files in bulk or chaining greps, consider:
 
@@ -59,9 +61,27 @@ Before opening files in bulk or chaining greps, consider:
 - **"What calls X / what does X call / blast radius if I change X?"** → `chiasmus_graph` with `analysis="callers" | "callees" | "impact"`.
 - **"Can A reach B? What's the call chain?"** → `chiasmus_graph` with `analysis="reachability"` or `"path"`.
 - **"Dead code? Cycles? Layer violations?"** → `chiasmus_graph` with the matching analysis.
-- **Full code review of a file set** → `chiasmus_review`, then execute its phases.
+- **Structural/architectural review of a file set** → `chiasmus_review`, then execute its phases. (For diff/PR reviews, use the `code-review` subagent instead — see "Review instructions" above.)
 - **Formal logic checks** (RBAC conflicts, config consistency, version constraints, state-machine reachability) → `chiasmus_formalize` → fill slots → `chiasmus_verify`. Do not use `chiasmus_solve` or `chiasmus_learn`; both call a remote LLM and are denied here.
 
 When `chiasmus_graph` or `chiasmus_map` would answer a question in one call, use it instead of multiple `eca__grep` rounds. Fall back to `eca__grep` for literal text matches, comments, non-supported languages, or non-source files.
 
-Pass `cache=true` on `chiasmus_graph` and `chiasmus_map` when running more than one analysis over the same files in a session.
+Whenever you run more than one analysis over the same files in a session, pass `cache=true` on `chiasmus_graph` and `chiasmus_map` so unchanged files are not re-parsed.
+
+## WaveScope instructions
+
+Prefer the `wavescope` MCP tools for *intra-file* navigation and triage of large files (>200 lines), and for token-cheap structural previews. WaveScope treats source as a signal (wavelet transforms) to give multi-resolution views, complexity heatmaps, and structural boundaries — it tracks structure, not specific strings. Interpret the JSON bands/peaks/scores it returns; do not attempt the wavelet math yourself.
+
+Lane boundaries (do not let WaveScope override these):
+
+- **Maintainability / technical-debt verdicts** stay with CodeScene — Code Health remains the source of truth (see "CodeScene instructions"). Treat a WaveScope complexity heatmap as a *triage hint* for where to look, not a quality judgment.
+- **Cross-file relationships** (calls, reachability, impact, dead code, cycles) stay with Chiasmus (see "Chiasmus instructions"). WaveScope answers "where inside this file," not "what calls this across the repo."
+- **Literal text matches** stay with `eca__grep`.
+
+When to use which tool:
+
+- **"Navigate or modify a region in a large file without reading all of it"** → `query_wavelet_context`, centered on your target line. Read the Coarse band for the major section, the Medium band for surrounding signatures, the Fine band for the immediate snippet; jump via peak positions.
+- **"Where is the gnarly/bug-prone logic in this file?"** → `get_complexity_heatmap` / `get_entropy_bands`; focus on high-irregularity scores (near 1.0), skim low-entropy boilerplate. Then confirm any debt conclusion with CodeScene `code_health_review`.
+- **"What are the core/heavyweight files when onboarding onto a repo?"** → `get_important_positions`; start deep dives at the top-ranked files. For the call-graph view of the same question, cross-check with Chiasmus `chiasmus_map` (overview) or `hubs`.
+
+Reach for WaveScope *before* pulling raw file text: it isolates the exact lines you need at a large token saving, preserving context budget.
