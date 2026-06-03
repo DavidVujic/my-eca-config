@@ -87,6 +87,11 @@
       "command": "npx",
       "args": ["-y", "chiasmus"]
     },
+    "wavescope": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["wavescope-mcp"]
+    },
     "codescene": {
       "command": "cs-mcp"
     }
