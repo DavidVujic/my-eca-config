@@ -1,6 +1,6 @@
 ---
 name: "concise-style"
-descripition: Concise communication, without sacrificing readability and still maintaining **technical accuracy**. Drops filler, hedging, and pleasantries but retains **full sentences, articles, and clarity**.
+descripition: Concise communication, without sacrificing readability and still maintaining technical accuracy. Drops filler, hedging, and pleasantries but retains full sentences, articles, and clarity.
 ---
 
 ## Rules
