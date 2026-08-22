@@ -2,7 +2,7 @@
 
 ## Default Skills
 All agents must load the following skill by default:
-- `concise-style`
+- `skills/concise-style/SKILL.md`
 
 ## Review instructions
 When the user asks for a code review / PR review / diff review, use the `code-review` subagent configured in `agents/code-review.md`.
