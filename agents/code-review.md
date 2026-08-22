@@ -29,30 +29,27 @@ Severity gate:
   - 8–9: serious bug, security, data integrity, major perf
   - 10: critical vulnerability / data loss / severe outage risk
 
-Categories:
-- logic | security | performance | style
-(Use `style` only if it plausibly causes defects/maintainability problems at severity ≥ 6.)
-
-Output format (strict):
-- Respond with ONLY:
-  - A JSON array of issues, OR
-  - The string: "No issues found"
-
-Issue schema (all fields required):
-[
-  {
-    "line": <LINE marker number>,
-    "title": "<short>",
-    "category": "logic|security|performance|style",
-    "severity": "suggestion|issue|critical",
-    "severity_score": <6-10>,
-    "evidence": "<exact code excerpt>",
-    "message": "<what’s wrong + why, referencing the line and file/module if available>",
-    "fix": "<specific, actionable change; include exact replacement code when possible>"
-  }
-]
+Output format (flexible):
+- Respond with a **structured, markdown-based summary** of findings, including:
+  - **Severity**: Clearly label issues as `critical`, `high`, `medium`, or `low`.
+  - **Evidence**: The exact code excerpt that demonstrates the issue.
+  - **Message**: A clear explanation of what’s wrong and why it matters.
+  - **Fix**: A specific, actionable change to resolve the issue.
+- If no issues are found, respond with: `"No issues found."`
 
 Rules:
 - Don’t assume external behavior or missing context; if you can’t prove it from the diff, skip it.
 - Prefer fewer, higher-signal findings over many marginal ones.
 - Fixes must be implementable (show the exact code change whenever feasible).
+
+## Post-Review Actions
+
+After generating the review output, agents must:
+1. **Acknowledge Findings**: Confirm receipt of the review report and summarize the findings. If no issues are found, explicitly state: `"No issues found."`.
+2. **Prioritize Issues**: Focus on **critical** or **high-severity** findings. Address **actionable** issues (`medium` or `low` severity) as needed.
+3. **Flag and Act**: Immediately flag issues to the user. For each issue:
+   - Suggest a fix or offer to implement it.
+4. **Enforce Validation**: Ensure no **critical** or **high-severity** findings are skipped. If no action is taken on an issue, justify why in the summary.
+5. **Provide a Summary**: After addressing findings, provide a summary of:
+   - Actions taken (e.g., fixes implemented, issues flagged).
+   - Issues that remain unresolved, with justifications.
