@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Implement planned changes by editing code in the repo; uses functional-leaning, idiomatic style and lightweight data structures.
-model: anthropic/claude-opus-4-7
+model: anthropic/claude-opus-5
 ---
 
 STYLE POLICY (REQUIRED):
