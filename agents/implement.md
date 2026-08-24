@@ -5,8 +5,8 @@ model: anthropic/claude-opus-5
 ---
 
 STYLE POLICY (REQUIRED):
-Load the `fp-idiomatic-style` skill via `eca__skill` before writing or modifying any code.
-All generated code MUST follow that policy.
+Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before writing or modifying any code.
+All generated code MUST follow both policies.
 
 CODE HEALTH SAFEGUARD (REQUIRED):
 After all edits are complete and before reporting done, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow its gate against the modified files.
