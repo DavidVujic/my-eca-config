@@ -8,7 +8,7 @@ description: "Produce an implementation plan with a functional-leaning, idiomati
 Produce an implementation plan with a functional-leaning, idiomatic style mindset; prefers lightweight data structures over dataclasses/pydantic unless justified.
 
 STYLE MINDSET (REQUIRED):
-Load the `fp-idiomatic-style` skill via `eca__skill` before writing the plan.
+Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before writing the plan.
 Apply it as a design constraint (architecture and data flow), not as code-generation.
 
 PLANNING OUTPUT:
