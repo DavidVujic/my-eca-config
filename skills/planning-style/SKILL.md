@@ -21,6 +21,8 @@ The plan should include:
 - Testing approach (what to test, not full test code)
 
 RULES:
+- The Plan itself should be written in a very concise way.
+- The Plan should keep things simple and be easy to read.
 - Prefer small composable functions over large stateful classes.
 - Prefer explicit return values over hidden side effects.
 - Do not propose new dataclasses/pydantic schemas unless there is a concrete need (validation, invariants, long-lived domain objects).
