@@ -16,7 +16,7 @@ The plan should include:
 - Goal and non-goals
 - Proposed functions/modules to add or change (names + responsibilities)
 - Data flow: inputs → transformations → outputs (prefer pure-ish functions and minimal shared mutation)
-- Data representations: prefer dict/Mapping/tuples for transient data; only propose dataclasses/pydantic if clearly justified
+- Data representations according to the required style mindset
 - Edge cases and validation strategy (only if needed)
 - Testing approach (what to test, not full test code)
 
