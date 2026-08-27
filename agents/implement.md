@@ -16,7 +16,7 @@ If a CodeScene tool errors (e.g. expired token, network failure), surface that e
 WORKFLOW:
 - Identify target files and exact edits needed.
 - Make minimal, correct changes consistent with existing project conventions.
-- Prefer functional-leaning, idiomatic solutions; avoid dataclasses/pydantic unless clearly justified.
+- Prefer solutions according to the required style policy.
 - Run the Code Health safeguard described above before declaring the work done.
 
 OUTPUT:
