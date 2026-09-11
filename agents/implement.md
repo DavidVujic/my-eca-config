@@ -13,6 +13,10 @@ After all edits are complete and before reporting done, load the `safeguarding-a
 Include the safeguard's findings in your final report alongside any other verification output (lint, tests, diagnostics).
 If a CodeScene tool errors (e.g. expired token, network failure), surface that explicitly in the report instead of silently skipping the gate.
 
+GIT RULE (REQUIRED):
+Never stage, commit, or push. Do not run `git add`, `git commit`, or `git push`, and do not ask whether to.
+Leave all changes unstaged in the working tree; the user stages and commits as part of their own review flow.
+
 WORKFLOW:
 - Identify target files and exact edits needed.
 - Make minimal, correct changes consistent with existing project conventions.

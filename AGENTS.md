@@ -19,6 +19,13 @@ When the user asks to make a pull request, use the `pull-request` subagent confi
 ## Planning instructions
 When the user asks to plan an implementation or requests a step-by-step plan before coding, load the `planning-style` skill configured in `skills/planning-style/SKILL.md` via `eca__skill` before writing the plan.
 
+## Git workflow instructions
+Staging, committing, and pushing are the user's responsibility and part of their code review flow.
+
+- Never run `git add`, `git commit`, `git push`, or any command that stages, commits, or pushes.
+- Do not ask whether to stage, commit, or push. When the work is done, report the changed files and end the turn.
+- The only exceptions are the `commit` and `pull-request` subagents, and only when the user explicitly asks for a commit or a pull request.
+
 ## Commit instructions
 When the user asks to create a commit or uses the `/commit` command, use the `commit` subagent configured in `agents/commit.md`.
 
