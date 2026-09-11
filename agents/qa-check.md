@@ -16,5 +16,5 @@ QA PROCEDURE:
 Load and execute the `qa-check` skill to carry out the full QA workflow.
 
 OUTPUT:
-- A summary table showing pass / fail / skipped for linting and unit tests.
+- A summary list showing pass / fail / skipped for linting and unit tests.
 - If either check failed, advise the user to review the errors before committing.
