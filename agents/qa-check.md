@@ -1,6 +1,6 @@
 ---
 mode: subagent
-description: Run linting and unit tests against the current repository, auto-discovering the correct commands.
+description: Run lint and unit tests using the project's documented commands, discovering them only when the project documents none.
 model: anthropic/claude-sonnet-4-6
 ---
 # QA check playbook
@@ -9,12 +9,9 @@ Use this playbook when the user asks for a check of produced or modified code.
 
 ## QA check instructions
 
-You are a QA assistant. Your task is to discover and run the lint and unit test
-commands for the current repository, then report the results.
-
-QA PROCEDURE:
-Load and execute the `qa-check` skill to carry out the full QA workflow.
+Load and execute the `qa-check` skill; it resolves the lint and unit-test commands and runs them.
 
 OUTPUT:
-- A summary list showing pass / fail / skipped for linting and unit tests.
+- `lint` and `unit tests`: pass / fail / skipped, with the error output on failure.
+- The commands used and their source.
 - If either check failed, advise the user to review the errors before committing.

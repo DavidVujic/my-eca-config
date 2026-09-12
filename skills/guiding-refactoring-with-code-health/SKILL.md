@@ -15,7 +15,7 @@ Use Code Health as the control signal for refactoring. The agent should first un
 - The user asks for refactoring help and wants an objective way to measure progress.
 - A safeguard or review points to complexity, size, low cohesion, or deep nesting.
 
-Do not use this skill when the task is to rank project-wide priorities. Use `prioritizing-technical-debt` for that.
+Do not use this skill when the task is to rank project-wide priorities; it is file-scoped.
 
 ## Quick Reference
 

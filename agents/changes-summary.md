@@ -2,6 +2,7 @@
 mode: subagent
 description: Summarize a git diff in <= 3 sentences focusing on what and why.
 model: google/gemini-3-flash-preview
+variant: low
 ---
 # Changes summary playbook
 

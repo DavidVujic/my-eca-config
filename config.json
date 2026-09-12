@@ -19,7 +19,12 @@
       "keyRc": "generativelanguage.googleapis.com",
       "models": {
         "gemini-2.5-flash": {},
-        "gemini-3-flash-preview": {},
+        "gemini-3-flash-preview": {
+          "variants": {
+            "low": {"extra_body": {"google": {"thinking_config": {"thinking_level": "low", "include_thoughts": true}}}},
+            "high": {"extra_body": {"google": {"thinking_config": {"thinking_level": "high", "include_thoughts": true}}}}
+          }
+        },
         "gemini-3.1-pro-preview": {
           "variants": {
             "low": {

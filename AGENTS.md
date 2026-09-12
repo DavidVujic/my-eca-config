@@ -26,9 +26,6 @@ When the user asks to handle review comments on a pull request:
 - Treat subagent output as a claim. After `implement`: `eca__editor_diagnostics`, then the `qa-check` subagent when code changed. After `code-review`: the spot-check described above. After `qa-check`: read the failures yourself before deciding the next step.
 - Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
 
-## Five Whys instructions
-When the user asks for a 5 Whys analysis, use the `five-whys` subagent configured in `agents/five-whys.md`.
-
 ## Changes summary instructions
 When the user asks for a changes summary, use the `changes-summary` subagent configured in `agents/changes-summary.md`.
 
@@ -73,7 +70,7 @@ When the user asks to refactor or improve a file, load the `guiding-refactoring-
 
 ### Configuration
 
-When the user wants to view, set, or troubleshoot CodeScene MCP configuration (access token, on-prem URL, default project, SSL bundle, enabled tools), load `configuring-codescene-mcp`.
+When the user wants to view, set, or troubleshoot CodeScene MCP configuration, use `codescene__get_config`, `codescene__set_config` and `codescene__verify_installation` directly.
 
 ### Bypass rule
 

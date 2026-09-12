@@ -17,7 +17,7 @@ STRUCTURAL SAFETY (REQUIRED for languages Chiasmus supports, unless the edit sta
 Take the navigation line from the file you just read or from `chiasmus_map mode="symbol"`. Callers that Chiasmus reports and the references do not mean the name is ambiguous; trust the references.
 
 CODE HEALTH SAFEGUARD (REQUIRED):
-After all edits are complete and before reporting done, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow its gate against the modified files.
+Load the `safeguarding-ai-generated-code` skill via `eca__skill` before editing and follow it: `code_health_review` on each file right after modifying it, then the broader gate over all modified files before reporting done.
 Include the safeguard's findings in your final report alongside any other verification output (lint, tests, diagnostics).
 If a CodeScene tool errors (e.g. expired token, network failure), surface that explicitly in the report instead of silently skipping the gate.
 
