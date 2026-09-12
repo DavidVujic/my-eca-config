@@ -99,10 +99,7 @@
           "argsMatchers": {
             "path": [".*/\\.env$", ".*/secrets\\.env$"]
           }
-        },
-        "chiasmus__chiasmus_solve": {},
-        "chiasmus__chiasmus_learn": {},
-        "chiasmus__chiasmus_search": {}
+        }
       }
     }
   },
@@ -130,6 +127,7 @@
     }
   },
   "disabledTools": [
+    "chiasmus__chiasmus_(solve|learn|search)",
     "datadog__(?!(get|search|list|find|aggregate|analyze|check)_|monitor_groups_search$|load_datadog_skill$).*",
     "sentry__(add|create|delete|remove|update|onboarding)_.*",
     "circleci__(cancel|rerun|rollback)_.*"
