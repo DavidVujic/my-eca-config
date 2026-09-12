@@ -119,7 +119,7 @@ Chiasmus matches functions by **name** across the whole file set; editor navigat
 
 ### Building the `files` argument
 
-Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Build the list once per session with a shell `find` (exclude `.venv`, `node_modules`, `target`, `dist`, `build`), reuse it in every call, and always pass `cache=true`.
+Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Build it with a shell `find` (exclude `.venv`, `node_modules`, `target`, `dist`, `build`) and always pass `cache=true`. The array is re-sent on every call, so scope it to the packages involved in the change; use the whole repo only for analyses that need it (`dead-code`, `cycles`, `communities`, `hubs`, `overview`).
 
 ### Required uses
 

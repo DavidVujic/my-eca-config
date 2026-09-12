@@ -26,7 +26,7 @@ Precondition (required):
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
 Structural impact (required when the diff renames a function or changes its signature or behavior):
-- `files` = absolute paths from a shell `find` (no globs); pass `cache=true`.
+- `files` = absolute paths from a shell `find` (no globs), scoped to the packages the diff touches; pass `cache=true`.
 - From `diff_context`, list the functions that were renamed, removed, or changed in signature or behavior.
 - Run `eca__editor_references` on each for the exact usages, then `chiasmus_graph analysis="impact" target=<fn>` for the transitive chain. A usage outside the diff that is not updated for the change is a reportable issue. When the two disagree, the name is ambiguous — trust the references and say so.
 - Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.

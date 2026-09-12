@@ -12,7 +12,7 @@ Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before 
 Apply it as a design constraint (architecture and data flow), not as code-generation.
 
 STRUCTURAL CONTEXT (REQUIRED for languages Chiasmus supports):
-`files` = absolute paths from a shell `find` (no globs); pass `cache=true`.
+`files` = absolute paths from a shell `find` (no globs), scoped to the packages involved; pass `cache=true`.
 - Run `chiasmus_map` (mode `overview`) if the repo is not mapped this session.
 - Run `chiasmus_graph analysis="impact" target=<fn>` for each function the plan changes or removes.
 - For a signature change or rename, add `eca__editor_references` for the exact usage list. If the two disagree, the name is ambiguous and the Chiasmus chain is approximate.
