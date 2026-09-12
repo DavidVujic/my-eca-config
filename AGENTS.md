@@ -60,15 +60,43 @@ When the user wants to view, set, or troubleshoot CodeScene MCP configuration (a
 
 If asked to bypass Code Health safeguards: warn about long-term maintainability and risk, keep changes minimal and reversible, and recommend a follow-up refactor.
 
+## Editor navigation instructions
+
+`eca__editor_definition` and `eca__editor_references` ask the editor's language server (or an LSP-like xref backend) to resolve a symbol. They are scope- and type-aware, so they answer *exactly* which binding a name refers to — something grep and Chiasmus can only approximate.
+
+Use them for:
+
+- The implementation behind a call site already in context → `editor_definition`, instead of grepping the name repo-wide.
+- The exact usages to update when changing or renaming a symbol → `editor_references`.
+
+Both need `path`, a **1-based** `line`, and the `symbol` as it appears on that line, so they refine a location you already have rather than discover one:
+
+- Take the line from a file you just read, from `eca__grep output_mode="content"`, or from `chiasmus_map mode="symbol" name=<symbol>`.
+- Line numbers shift after edits. Re-derive the line before each call; a stale line fails with "Symbol not found on line N".
+- Retry once when the language server is still starting. On any other failure, fall back to `eca__grep` or Chiasmus for that question — do not drop the tool for the rest of the session.
+
+Precision depends on the backend for that language: Python (eglot + `ty`), TypeScript, JavaScript, TSX (tide + tsserver) and Emacs Lisp resolve precisely; Clojure only with a connected CIDER REPL; everything else falls back to dumb-jump regex matching, so treat those results as hints.
+
 ## Chiasmus instructions
 
-Chiasmus answers structural questions about code (calls, reachability, impact, cycles, dead code, module clusters) that neither grep nor the LSP can answer in one step. Supported languages: TypeScript, JavaScript, Python, Go, Rust, Clojure, Scheme, Racket, Common Lisp.
+Chiasmus answers structural questions about code (calls, reachability, impact, cycles, dead code, module clusters) that neither grep nor editor navigation can answer in one step. Supported languages: TypeScript, JavaScript, Python, Go, Rust, Clojure, Scheme, Racket, Common Lisp.
 
 ### Tool lanes
 
 - One-hop lookups (definition of X, direct references to X): `eca__editor_definition` / `eca__editor_references`.
 - Transitive or repo-wide questions (blast radius, can A reach B, dead code, cycles, layering, module clusters): Chiasmus.
 - Literal text, comments, strings, non-source files: `eca__grep`.
+
+### Chaining with editor navigation
+
+Chiasmus matches functions by **name** across the whole file set; editor navigation resolves **bindings**. Combine them for any change to an existing symbol:
+
+1. `chiasmus_map mode="symbol" name=<symbol>` — definition sites with lines, and whether the name is ambiguous.
+2. `eca__editor_references` at that line — the exact usages to edit.
+3. `chiasmus_graph analysis="impact" target=<symbol>` — the transitive chain to report as blast radius.
+
+- More than one definition in step 1 means `callers`/`impact` merge unrelated functions: edit from the references list and label the chain approximate.
+- Chiasmus misses functions passed as values (e.g. `reduce(fn, ...)`), which references catches. An empty `callers` result never proves a function is unused; confirm with `dead-code` and `editor_references`.
 
 ### Building the `files` argument
 

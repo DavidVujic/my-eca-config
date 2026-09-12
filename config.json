@@ -48,6 +48,8 @@
             ]
           }
         },
+        "eca__editor_definition": {},
+        "eca__editor_references": {},
         "codescene__explain_code_health": {},
         "codescene__explain_code_health_productivity": {},
         "codescene__code_health_review": {},
