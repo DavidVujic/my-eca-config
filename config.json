@@ -46,13 +46,6 @@
         }
       }
     },
-    "openai": {
-      "keyRc": "api.openai.com",
-      "models": {
-        "gpt-5-mini": {},
-        "gpt-5.2": {}
-      }
-    },
     "mistral": {
       "api": "openai-chat",
       "url": "https://api.mistral.ai/v1",
