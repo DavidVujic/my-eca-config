@@ -11,7 +11,7 @@ Run linting and unit tests after code changes and report the result. Never auto-
 
 Check these project-side sources in order; the first that yields runnable commands wins, then skip to Step 3.
 
-1. A project skill: the available skills list includes one from the project (`.agents/skills` or `.eca/skills`) whose description covers testing, linting or QA. Load it with `eca__skill` and follow it.
+1. A project skill: the available skills include one whose description covers this project's testing, linting or QA (projects ship these in `.agents/skills` or `.eca/skills`). Load it with `eca__skill` and follow it.
 2. Project instructions already in context: the project's `AGENTS.md` or `.eca/rules` state how to lint or run unit tests, in any wording.
 
 Rules:

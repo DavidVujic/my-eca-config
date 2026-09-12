@@ -9,12 +9,12 @@ When the user asks for a code review / PR review / diff review, use the `code-re
 
 After the subagent returns:
 - Summarize the findings; if there are none, say "No issues found."
-- Verify structural findings before acting: `eca__editor_references` on the cited symbol and `chiasmus_graph analysis="impact"` for the claimed callers.
+- Spot-check findings that name callers outside the diff with `eca__editor_references` before acting on them.
 - Address critical and high findings; route fixes to the `implement` subagent. For each finding you do not act on, state why.
 - End with actions taken and findings left open.
 
-## Pull request feedback instructions
-When the user asks to handle PR review comments:
+## PR review comments instructions
+When the user asks to handle review comments on a pull request:
 - Fetch them with `eca__git`: `gh pr view <n> --comments` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
 - Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition`, and check blast radius with `chiasmus_graph analysis="impact"` before agreeing or disagreeing.
 - Group the outcome per comment: accept (with the planned change), reject (with evidence), or needs clarification.
@@ -23,7 +23,7 @@ When the user asks to handle PR review comments:
 ## Delegation instructions
 - Hand subagents concrete inputs: absolute file paths, the `files` list for Chiasmus, exact lines from the diff, and the acceptance criteria. Do not make them rediscover what you already know.
 - Use the built-in `explorer` subagent for broad codebase reading that would otherwise flood this context; keep the summary, not the raw files.
-- Treat subagent output as a claim. After `implement`: `eca__editor_diagnostics`, then `qa-check`. After `code-review`: verify structural findings as described above. After `qa-check`: read the failures yourself before deciding the next step.
+- Treat subagent output as a claim. After `implement`: `eca__editor_diagnostics`, then the `qa-check` subagent when code changed. After `code-review`: the spot-check described above. After `qa-check`: read the failures yourself before deciding the next step.
 - Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
 
 ## Five Whys instructions
@@ -52,7 +52,7 @@ When the user asks to create a commit or uses the `/commit` command, use the `co
 When the user asks to implement a plan, write code, refactor, or apply changes, use the `implement` subagent configured in `agents/implement.md`.
 
 ## QA check instructions
-When the user asks to check the changes of code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete.
+When the user asks to check the changes of code, or after the `implement` subagent changed code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete.
 
 ## CodeScene instructions
 
@@ -138,7 +138,7 @@ RBAC conflicts, config consistency, dependency version constraints, state-machin
 
 ## Observability and delivery tools
 
-All four servers are read-only by configuration and every call asks for approval, so make each query specific and batch independent ones in a single turn.
+Datadog, Sentry and CircleCI are read-only by configuration; Linear can write. Every call asks for approval, so make each query specific and batch independent ones in a single turn.
 
 Lanes:
 
