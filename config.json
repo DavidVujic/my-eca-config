@@ -121,9 +121,13 @@
     },
     "linear": {
       "url": "https://mcp.linear.app/mcp"
+    },
+    "sentry": {
+      "url": "https://mcp.sentry.dev/mcp"
     }
   },
   "disabledTools": [
-    "datadog__(?!(get|search|list|find|aggregate|analyze|check)_|monitor_groups_search$|load_datadog_skill$).*"
+    "datadog__(?!(get|search|list|find|aggregate|analyze|check)_|monitor_groups_search$|load_datadog_skill$).*",
+    "sentry__(add|create|delete|remove|update|onboarding)_.*"
   ]
 }
