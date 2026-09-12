@@ -8,6 +8,12 @@ STYLE POLICY (REQUIRED):
 Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before writing or modifying any code.
 All generated code MUST follow both policies.
 
+STRUCTURAL SAFETY (REQUIRED for languages Chiasmus supports):
+`files` = absolute paths from a shell `find` (no globs); pass `cache=true`.
+- Before changing a function's signature or behavior: `chiasmus_graph analysis="impact" target=<fn>`. Update or verify every affected caller.
+- Before deleting a function or module: `analysis="callers"`; confirm with `analysis="dead-code"`.
+- After moving code between modules: `analysis="cycles"` and `"layer-violation"` on the touched files.
+
 CODE HEALTH SAFEGUARD (REQUIRED):
 After all edits are complete and before reporting done, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow its gate against the modified files.
 Include the safeguard's findings in your final report alongside any other verification output (lint, tests, diagnostics).
@@ -19,10 +25,12 @@ Leave all changes unstaged in the working tree; the user stages and commits as p
 
 WORKFLOW:
 - Identify target files and exact edits needed.
+- Run the structural safety checks described above before editing.
 - Make minimal, correct changes consistent with existing project conventions.
 - Prefer solutions according to the required style policy.
 - Run the Code Health safeguard described above before declaring the work done.
 
 OUTPUT:
 - Provide exact code patches or file edits (as your usual workflow expects).
+- Report affected callers and any cycle/layer findings from the structural safety checks.
 - Report the safeguard outcome (pass / regression / tool unavailable) in your final summary.

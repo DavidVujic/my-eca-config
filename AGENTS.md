@@ -62,22 +62,31 @@ If asked to bypass Code Health safeguards: warn about long-term maintainability 
 
 ## Chiasmus instructions
 
-Prefer the `chiasmus` MCP tools for any **structural** question about source code (TypeScript, JavaScript, Python, Go, Rust, Clojure). A question is **structural** when it is about relationships between symbols — calls, reachability, impact/blast radius, cycles, layering, dead code. It is **textual** when it is about literal occurrences, comments, or strings; use `eca__grep` for those. Grep only finds string matches; chiasmus answers reachability, impact, and dead-code questions that grep cannot.
+Chiasmus answers structural questions about code (calls, reachability, impact, cycles, dead code, module clusters) that neither grep nor the LSP can answer in one step. Supported languages: TypeScript, JavaScript, Python, Go, Rust, Clojure, Scheme, Racket, Common Lisp.
 
-Reach for chiasmus *first* on structural questions: if you would otherwise read 3+ files or run 2+ greps to answer one, start with `chiasmus_map`/`chiasmus_graph`. These tools require **absolute file paths** passed as a `files` array — using relative paths will fail.
+### Tool lanes
 
-Before opening files in bulk or chaining greps, consider:
+- One-hop lookups (definition of X, direct references to X): `eca__editor_definition` / `eca__editor_references`.
+- Transitive or repo-wide questions (blast radius, can A reach B, dead code, cycles, layering, module clusters): Chiasmus.
+- Literal text, comments, strings, non-source files: `eca__grep`.
 
-- **"What's in this repo / what does this file expose / where is X defined?"** → `chiasmus_map` (modes: `overview`, `file`, `symbol`).
-- **"What calls X / what does X call / blast radius if I change X?"** → `chiasmus_graph` with `analysis="callers" | "callees" | "impact"`.
-- **"Can A reach B? What's the call chain?"** → `chiasmus_graph` with `analysis="reachability"` or `"path"`.
-- **"Dead code? Cycles? Layer violations?"** → `chiasmus_graph` with the matching analysis.
-- **Structural/architectural review of a file set** → `chiasmus_review`, then execute its phases. (For diff/PR reviews, use the `code-review` subagent instead — see "Review instructions" above.)
-- **Formal logic checks** (RBAC conflicts, config consistency, version constraints, state-machine reachability) → `chiasmus_formalize` → fill slots → `chiasmus_verify`. Do not use `chiasmus_solve` or `chiasmus_learn`; both call a remote LLM and are denied here.
+### Building the `files` argument
 
-When `chiasmus_graph` or `chiasmus_map` would answer a question in one call, use it instead of multiple `eca__grep` rounds. Fall back to `eca__grep` for literal text matches, comments, non-supported languages, or non-source files.
+Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Build the list once per session with a shell `find` (exclude `.venv`, `node_modules`, `target`, `dist`, `build`), reuse it in every call, and always pass `cache=true`.
 
-Whenever you run more than one analysis over the same files in a session, pass `cache=true` on `chiasmus_graph` and `chiasmus_map` so unchanged files are not re-parsed.
+### Required uses
+
+- Task start in an unmapped repo: `chiasmus_map` (mode `overview`) before bulk `eca__read_file`. For large repos, add `chiasmus_graph analysis="hubs"` and `"communities"`.
+- Before renaming or changing a function's signature or behavior: `chiasmus_graph analysis="impact" target=<fn>`. Report the affected callers.
+- Before deleting a function or module: `analysis="callers"`; confirm with `analysis="dead-code"`.
+- After moving code between modules: `analysis="cycles"` and `"layer-violation"` on the touched files.
+- Bug hunt "how does input reach X": `analysis="path" from=<entry> to=<X>`, then read only the functions on the path.
+- Diff / PR review (owned by the `code-review` subagent): `impact` on every changed or removed function. If a snapshot of the base branch exists, run `analysis="diff" against=<base>` first. While working on the base branch, save one with `chiasmus_graph analysis="summary" cache=true save_snapshot=<branch>`; never switch branches to create it.
+- Structural review of a file set (not a diff): `chiasmus_review`, then execute its phases.
+
+### Formal checks
+
+RBAC conflicts, config consistency, dependency version constraints, state-machine reachability: `chiasmus_formalize` → fill slots → `chiasmus_lint` → `chiasmus_verify`. When the user provides a Mermaid flowchart or state diagram, pass it directly with `chiasmus_verify solver="prolog" format="mermaid"`. `chiasmus_solve`, `chiasmus_learn`, and `chiasmus_search` are denied (remote LLM / embedding calls).
 
 ## WaveScope instructions
 
@@ -93,6 +102,6 @@ When to use which tool:
 
 - **"Navigate or modify a region in a large file without reading all of it"** → `query_wavelet_context`, centered on your target line. Read the Coarse band for the major section, the Medium band for surrounding signatures, the Fine band for the immediate snippet; jump via peak positions.
 - **"Where is the gnarly/bug-prone logic in this file?"** → `get_complexity_heatmap` / `get_entropy_bands`; focus on high-irregularity scores (near 1.0), skim low-entropy boilerplate. Then confirm any debt conclusion with CodeScene `code_health_review`.
-- **"What are the core/heavyweight files when onboarding onto a repo?"** → `get_important_positions`; start deep dives at the top-ranked files. For the call-graph view of the same question, cross-check with Chiasmus `chiasmus_map` (overview) or `hubs`.
+- **"Where inside the core files is the dense logic?"** → `get_important_positions` on the hub files from Chiasmus. Chiasmus picks the files; WaveScope picks the lines.
 
 Reach for WaveScope *before* pulling raw file text: it isolates the exact lines you need at a large token saving, preserving context budget.

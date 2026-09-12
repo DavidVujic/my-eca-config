@@ -18,10 +18,17 @@ Precondition (required):
   and stop.
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
+Structural impact (required for languages Chiasmus supports):
+- `files` = absolute paths from a shell `find` (no globs); pass `cache=true`.
+- From `diff_context`, list the functions that were changed, renamed, or removed.
+- Run `chiasmus_graph analysis="impact" target=<fn>` for each. A caller outside the diff that is not updated for the change is a reportable issue.
+- Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.
+- If a snapshot of the base branch exists, run `analysis="diff" against=<base>` and check removed or rewired symbols with `impact`.
+
 Review scope:
-- Only comment on added/modified lines in the diff (lines starting with `+`), not unchanged context.
-- Only report issues you can support with direct evidence from the diff.
-- Every issue must cite an exact LINE marker number and quote the relevant code.
+- Comment on added/modified lines in the diff (lines starting with `+`). Unchanged code is admissible only when a Chiasmus result shows the diff breaks it.
+- Only report issues you can support with direct evidence from the diff or a Chiasmus result.
+- Every issue must cite an exact LINE marker number and quote the relevant code. Structural findings also name the affected caller and its file.
 
 Severity gate:
 - Score each issue 6–10. Output issues only if score ≥ 6.
@@ -38,7 +45,7 @@ Output format (flexible):
 - If no issues are found, respond with: `"No issues found."`
 
 Rules:
-- Don’t assume external behavior or missing context; if you can’t prove it from the diff, skip it.
+- Don’t assume external behavior or missing context; if you can’t prove it from the diff or a Chiasmus result, skip it.
 - Prefer fewer, higher-signal findings over many marginal ones.
 - Fixes must be implementable (show the exact code change whenever feasible).
 

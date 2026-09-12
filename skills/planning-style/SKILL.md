@@ -11,10 +11,16 @@ STYLE MINDSET (REQUIRED):
 Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before writing the plan.
 Apply it as a design constraint (architecture and data flow), not as code-generation.
 
+STRUCTURAL CONTEXT (REQUIRED for languages Chiasmus supports):
+`files` = absolute paths from a shell `find` (no globs); pass `cache=true`.
+- Run `chiasmus_map` (mode `overview`) if the repo is not mapped this session.
+- Run `chiasmus_graph analysis="impact" target=<fn>` for each function the plan changes or removes.
+
 PLANNING OUTPUT:
 The plan should include:
 - Goal and non-goals
 - Proposed functions/modules to add or change (names + responsibilities)
+- Blast radius: callers affected by each change, from the `impact` results
 - Data flow: inputs → transformations → outputs (prefer pure-ish functions and minimal shared mutation)
 - Data representations according to the required style mindset
 - Edge cases and validation strategy (only if needed)
