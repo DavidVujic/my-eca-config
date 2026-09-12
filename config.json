@@ -22,8 +22,26 @@
         "gemini-3-flash-preview": {},
         "gemini-3.1-pro-preview": {
           "variants": {
-            "low": {"extra_body": {"google": {"thinking_config": {"thinking_level": "low", "include_thoughts": true}}}},
-            "high": {"extra_body": {"google": {"thinking_config": {"thinking_level": "high", "include_thoughts": true}}}}
+            "low": {
+              "extra_body": {
+                "google": {
+                  "thinking_config": {
+                    "thinking_level": "low",
+                    "include_thoughts": true
+                  }
+                }
+              }
+            },
+            "high": {
+              "extra_body": {
+                "google": {
+                  "thinking_config": {
+                    "thinking_level": "high",
+                    "include_thoughts": true
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -40,10 +58,14 @@
       "url": "https://api.mistral.ai/v1",
       "keyRc": "api.mistral.ai",
       "models": {
-        "mistral-small-latest": {"extraPayload": { "max_completion_tokens": null}},
-        "mistral-medium": {"extraPayload": { "max_completion_tokens": null}},
-        "mistral-large-latest": {"extraPayload": { "max_completion_tokens": null}},
-        "devstral-latest": {"extraPayload": { "max_completion_tokens": null}}
+        "mistral-small-latest": {
+          "extraPayload": { "max_completion_tokens": null }
+        },
+        "mistral-medium": { "extraPayload": { "max_completion_tokens": null } },
+        "mistral-large-latest": {
+          "extraPayload": { "max_completion_tokens": null }
+        },
+        "devstral-latest": { "extraPayload": { "max_completion_tokens": null } }
       }
     }
   },
@@ -82,10 +104,7 @@
       "deny": {
         "eca__read_file": {
           "argsMatchers": {
-            "path": [
-              ".*/\\.env$",
-              ".*/secrets\\.env$"
-            ]
+            "path": [".*/\\.env$", ".*/secrets\\.env$"]
           }
         },
         "chiasmus__chiasmus_solve": {},
@@ -105,4 +124,3 @@
     }
   }
 }
-
