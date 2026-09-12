@@ -1,12 +1,18 @@
 {
-  "defaultModel": "anthropic/claude-opus-5",
+  "defaultModel": "anthropic/claude-fable-5-1",
+  "agent": {
+    "code": {
+      "variant": "medium"
+    }
+  },
   "providers": {
     "anthropic": {
       "keyRc": "api.anthropic.com",
       "models": {
+        "claude-fable-5-1": {},
         "claude-opus-5": {},
         "claude-opus-4-8": {},
-        "anthropic/claude-sonnet-4-6": {}
+        "claude-sonnet-4-6": {}
       }
     },
     "google": {
@@ -14,14 +20,30 @@
       "models": {
         "gemini-2.5-flash": {},
         "gemini-3-flash-preview": {},
-        "gemini-3.1-pro-preview": {}
-      }
-    },
-    "openai": {
-      "keyRc": "api.openai.com",
-      "models": {
-        "gpt-5-mini": {},
-        "gpt-5.2": {}
+        "gemini-3.1-pro-preview": {
+          "variants": {
+            "low": {
+              "extra_body": {
+                "google": {
+                  "thinking_config": {
+                    "thinking_level": "low",
+                    "include_thoughts": true
+                  }
+                }
+              }
+            },
+            "high": {
+              "extra_body": {
+                "google": {
+                  "thinking_config": {
+                    "thinking_level": "high",
+                    "include_thoughts": true
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "mistral": {
@@ -29,10 +51,14 @@
       "url": "https://api.mistral.ai/v1",
       "keyRc": "api.mistral.ai",
       "models": {
-        "mistral-small-latest": {"extraPayload": { "max_completion_tokens": null}},
-        "mistral-medium": {"extraPayload": { "max_completion_tokens": null}},
-        "mistral-large-latest": {"extraPayload": { "max_completion_tokens": null}},
-        "devstral-latest": {"extraPayload": { "max_completion_tokens": null}}
+        "mistral-small-latest": {
+          "extraPayload": { "max_completion_tokens": null }
+        },
+        "mistral-medium": { "extraPayload": { "max_completion_tokens": null } },
+        "mistral-large-latest": {
+          "extraPayload": { "max_completion_tokens": null }
+        },
+        "devstral-latest": { "extraPayload": { "max_completion_tokens": null } }
       }
     }
   },
@@ -71,10 +97,7 @@
       "deny": {
         "eca__read_file": {
           "argsMatchers": {
-            "path": [
-              ".*/\\.env$",
-              ".*/secrets\\.env$"
-            ]
+            "path": [".*/\\.env$", ".*/secrets\\.env$"]
           }
         },
         "chiasmus__chiasmus_solve": {},
@@ -94,4 +117,3 @@
     }
   }
 }
-
