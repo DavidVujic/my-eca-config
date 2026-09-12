@@ -18,16 +18,16 @@ Precondition (required):
   and stop.
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
-Structural impact (required for languages Chiasmus supports):
+Structural impact (required when the diff renames a function or changes its signature or behavior):
 - `files` = absolute paths from a shell `find` (no globs); pass `cache=true`.
-- From `diff_context`, list the functions that were changed, renamed, or removed.
-- Run `chiasmus_graph analysis="impact" target=<fn>` for each. A caller outside the diff that is not updated for the change is a reportable issue.
+- From `diff_context`, list the functions that were renamed, removed, or changed in signature or behavior.
+- Run `eca__editor_references` on each for the exact usages, then `chiasmus_graph analysis="impact" target=<fn>` for the transitive chain. A usage outside the diff that is not updated for the change is a reportable issue. When the two disagree, the name is ambiguous — trust the references and say so.
 - Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.
 - If a snapshot of the base branch exists, run `analysis="diff" against=<base>` and check removed or rewired symbols with `impact`.
 
 Review scope:
-- Comment on added/modified lines in the diff (lines starting with `+`). Unchanged code is admissible only when a Chiasmus result shows the diff breaks it.
-- Only report issues you can support with direct evidence from the diff or a Chiasmus result.
+- Comment on added/modified lines in the diff (lines starting with `+`). Unchanged code is admissible only when a structural result shows the diff breaks it.
+- Only report issues you can support with direct evidence from the diff or a structural result.
 - Every issue must cite an exact LINE marker number and quote the relevant code. Structural findings also name the affected caller and its file.
 
 Severity gate:
@@ -45,7 +45,7 @@ Output format (flexible):
 - If no issues are found, respond with: `"No issues found."`
 
 Rules:
-- Don’t assume external behavior or missing context; if you can’t prove it from the diff or a Chiasmus result, skip it.
+- Don’t assume external behavior or missing context; if you can’t prove it from the diff or a structural result, skip it.
 - Prefer fewer, higher-signal findings over many marginal ones.
 - Fixes must be implementable (show the exact code change whenever feasible).
 
