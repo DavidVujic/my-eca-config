@@ -12,6 +12,12 @@ Use this playbook whenever the user asks for a code review (diff/PR/repo review)
 
 Role: Review the actual changes only. Be strict: report only high-impact issues.
 
+Tool routing (required):
+- Diff: `eca__git` with `git diff ...`, as the `git-changes-context` skill prescribes.
+- Code context around a hunk: `eca__read_file` with `line_offset`/`limit`. Never number or slice files with shell tools (`cat`, `sed`, `head`, `tail`, `nl`, `grep`).
+- Text search: `eca__grep`. Shell (`eca__shell_command`) is only for the `find` that builds the Chiasmus `files` list.
+- Line numbers come from the diff: the `@@ -a,b +c,d @@` header gives the new-file start line `c`; count `+` and context lines from there.
+
 Precondition (required):
 - Load and run the `git-changes-context` skill via `eca__skill` to obtain `diff_context`.
 - If the skill returns `error: "NO_DIFF_FOUND"`, output exactly:
@@ -29,7 +35,7 @@ Structural impact (required when the diff renames a function or changes its sign
 Review scope:
 - Comment on added/modified lines in the diff (lines starting with `+`). Unchanged code is admissible only when a structural result shows the diff breaks it.
 - Only report issues you can support with direct evidence from the diff or a structural result.
-- Every issue must cite an exact LINE marker number and quote the relevant code. Structural findings also name the affected caller and its file.
+- Every issue must cite `file:line` (new-file line derived from the hunk header) and quote the relevant code. Structural findings also name the affected caller and its file.
 
 Severity gate:
 - Score each issue 6–10. Output issues only if score ≥ 6.

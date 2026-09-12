@@ -22,7 +22,7 @@ Follow these steps strictly and in order.
 Do **not** return `NO_DIFF_FOUND` after running only one command.
 
 For each step:
-- Run the command exactly as written.
+- Run the command exactly as written, using the `eca__git` tool (not `eca__shell_command`).
 - If the command errors **or** produces empty output, proceed to the next step.
 - If output is non-empty, set `diff_source_command` to the exact command string, set `diff_context` to the raw unified diff, and stop.
 
