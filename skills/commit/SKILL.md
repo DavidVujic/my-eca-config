@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Create a conventional commit from staged changes, with a diff-derived description body.
+description: Create a conventional commit from staged changes, with a diff-derived description body and a Code Health gate.
 ---
 
 # Commit Skill
@@ -26,7 +26,7 @@ Follow these steps strictly and in order.
 
 ### Step 1 — Check for staged changes
 
-Run:
+Run with `eca__git`:
 
     git diff --cached --stat
 
@@ -38,15 +38,19 @@ Do **not** auto-stage files. Do **not** proceed.
 
 ---
 
-### Step 2 — Obtain the diff context
+### Step 2 — Obtain the staged diff
 
-Load and execute the `git-changes-context` skill to obtain `diff_context`.
-
-If the skill returns `"error": "NO_DIFF_FOUND"`, fall back to using the staged diff:
+Run with `eca__git`:
 
     git diff --cached
 
-Capture whichever diff is available as `diff`.
+Capture the output as `diff`. Only the staged changes describe this commit; do not use the branch diff.
+
+---
+
+### Step 2b — Code Health gate
+
+Run `codescene__pre_commit_code_health_safeguard` on the repository. If it reports a degradation, stop and report the findings instead of committing; the user decides whether to refactor first or accept the risk explicitly.
 
 ---
 
@@ -67,19 +71,14 @@ Still generate the body from the diff. If the hint already contains a type prefi
 
 ### Step 4 — Execute the commit
 
-Construct the full commit message and run:
-
-    git commit -m "<full message>"
-
-Use a HEREDOC to preserve newlines:
+Construct the full commit message and run it with `eca__git`, passing the message on stdin with a quoted heredoc (never inside `$(...)`):
 
 ```bash
-git commit -m "$(cat <<'EOF'
+git commit -F - <<'EOF'
 <type>(<scope>): <subject>
 
 <body>
 EOF
-)"
 ```
 
 ---
@@ -96,6 +95,7 @@ Show the user:
 
 - Never fabricate changes not present in the staged diff.
 - Never auto-stage files — only commit what is already staged.
+- Never commit past a failing Code Health gate without the user's explicit acceptance.
 - Keep the subject line under 72 characters.
 - Use imperative mood in the subject (e.g. "add", not "added" or "adds").
 - The body should add value beyond the subject; do not simply repeat it.

@@ -1,99 +1,30 @@
 ---
 name: git-changes-context
-description: Reliably obtain a non-empty unified git diff for the current branch using safe fallbacks (origin/HEAD...HEAD, origin/main...HEAD, origin/master...HEAD) and return structured JSON containing the diff and the command used.
+description: Obtain the unified diff of the current branch against its base, trying remote then local base refs in a fixed order, and report which command produced it.
 ---
 
 # Git Changes Context Skill
 
-## Purpose
-
-Provide a deterministic way to obtain the actual change set (unified diff)
-for use by other agents (code review, security audit, test analysis, etc).
-
-This skill MUST be used whenever a task depends on reviewing changes.
-
----
+Provide the branch's change set (unified diff) for agents that review, summarize, or describe changes.
 
 ## Procedure
 
-Follow these steps strictly and in order.
+Run each command with `eca__git`, in this order, and stop at the first that succeeds with non-empty output:
 
-**Important:** You MUST attempt *every* step below until you find a **non-empty** diff.
-Do **not** return `NO_DIFF_FOUND` after running only one command.
+1. `git diff origin/HEAD...HEAD`
+2. `git diff origin/main...HEAD`
+3. `git diff origin/master...HEAD`
+4. `git diff main...HEAD`
+5. `git diff master...HEAD`
 
-For each step:
-- Run the command exactly as written, using the `eca__git` tool (not `eca__shell_command`).
-- If the command errors **or** produces empty output, proceed to the next step.
-- If output is non-empty, set `diff_source_command` to the exact command string, set `diff_context` to the raw unified diff, and stop.
+Try every step before giving up; an error or empty output means "next step", not "no diff".
 
-### Step 1 — Compare against origin/HEAD (preferred default-branch fallback)
+## Result
 
-Run:
+Report three things to the caller:
 
-    git diff origin/HEAD...HEAD
+- `diff_source_command`: the exact command that produced the diff.
+- `diff_context`: the raw unified diff, unmodified.
+- `error`: `NO_DIFF_FOUND` when all five commands errored or returned nothing; otherwise none.
 
----
-
-### Step 2 — Compare against origin/main
-
-Run:
-
-    git diff origin/main...HEAD
-
----
-
-### Step 3 — Compare against origin/master
-
-Run:
-
-    git diff origin/master...HEAD
-
----
-
-## Failure Condition
-
-If ALL of the above steps either error **or** produce empty output:
-
-Return:
-
-- `diff_source_command = null`
-- `diff_context = ""`
-- `error = "NO_DIFF_FOUND"`
-
-Do not guess.
-Do not fabricate changes.
-Do not continue silently.
-
----
-
-## Output Contract (STRICT)
-
-You MUST return JSON only.
-
-Return exactly this shape:
-
-{
-  "diff_source_command": string | null,
-  "diff_context": string,
-  "error": string | null
-}
-
-Rules:
-
-- No commentary.
-- No markdown.
-- No explanations.
-- No additional keys.
-- `diff_context` must contain raw unified diff text.
-- If no diff found, `error` must be "NO_DIFF_FOUND".
-
----
-
-## Guarantees
-
-This skill guarantees:
-
-- Deterministic fallback order
-- No hallucinated diffs
-- Explicit failure signaling
-- Compatibility with strict JSON-only agents
+Never fabricate or summarize the diff here; consumers do that.

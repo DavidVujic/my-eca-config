@@ -19,7 +19,30 @@
       "keyRc": "generativelanguage.googleapis.com",
       "models": {
         "gemini-2.5-flash": {},
-        "gemini-3-flash-preview": {},
+        "gemini-3-flash-preview": {
+          "variants": {
+            "low": {
+              "extra_body": {
+                "google": {
+                  "thinking_config": {
+                    "thinking_level": "low",
+                    "include_thoughts": true
+                  }
+                }
+              }
+            },
+            "high": {
+              "extra_body": {
+                "google": {
+                  "thinking_config": {
+                    "thinking_level": "high",
+                    "include_thoughts": true
+                  }
+                }
+              }
+            }
+          }
+        },
         "gemini-3.1-pro-preview": {
           "variants": {
             "low": {
@@ -114,7 +137,10 @@
     },
     "datadog": {
       "command": "$HOME/.local/bin/datadog_mcp_cli",
-      "args": ["--endpoint-path", "v1/mcp?toolsets=core,alerting,error-tracking"]
+      "args": [
+        "--endpoint-path",
+        "v1/mcp?toolsets=core,alerting,error-tracking"
+      ]
     },
     "linear": {
       "url": "https://mcp.linear.app/mcp"

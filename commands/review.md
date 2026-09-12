@@ -1,9 +1,7 @@
 # review
 
-Treat this as a code review request.
+Review the current changes.
 
-Follow the existing code review playbook in `agents/code-review.md`.
-
-Guardrail: Output must align with the playbook’s guidelines for actionability and clarity.
+Delegate to the `code-review` subagent configured in `agents/code-review.md`, then follow the post-review steps in `AGENTS.md` ("Review instructions").
 
 Arguments: $ARGUMENTS

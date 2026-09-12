@@ -5,53 +5,35 @@ model: anthropic/claude-sonnet-4-6
 ---
 # Pull request playbook
 
-Use this playbook whenever the user asks for a code review (diff/PR/repo review).
+Use this playbook whenever the user asks to create a pull request.
 
-## Create Pull Request instructions
-Use the `gh` CLI and the `gh pr create` command to create a pull request.
+## Preconditions
 
-CODE CHANGES CONTEXT:
+- Branch: run `git branch --show-current` with `eca__git`. If it is `main` or `master`, stop and report `{"error":"refusing_to_pr_from_default_branch"}`.
+- Diff: load and execute the `git-changes-context` skill to obtain `diff_context`. If it returns `{"error":"NO_DIFF_FOUND"}`, output `{"status":"no_changes"}` and stop.
+- Code Health gate: run `codescene__analyze_change_set` with `base_ref` set to the left side of `...` in the skill's `diff_source_command` (e.g. `origin/main`). If it reports a degradation, stop and report the findings instead of opening the PR; the user decides whether to refactor first or accept the risk explicitly.
 
-Before creating a pull request, load and execute the `git-changes-context` skill to obtain `diff_context`.
+## PR content
 
-If the skill returns:
-{"error":"NO_DIFF_FOUND"}
+Derive everything from `diff_context`; do not assume intent beyond what the changes show.
 
-Then output:
-{"status":"no_changes"}
-and stop. Do not create a pull request.
+Summary: at most three sentences, one when possible, on what changed and why — not which files or functions were touched. Undesired: "Updated login.js, added a function to handle tokens, and fixed a typo."
 
-All title and description content MUST be derived from this diff.
+Title: Conventional Commit form `<type>(optional-scope): <description>`, derived from the summary. Types by primary intent: `feat` new behavior, `fix` bug fix, `refactor` internal change without behavior change, `perf`, `test`, `docs`, `chore`.
 
-PR CONTENT GENERATION:
+Body: exactly the summary. No headings, file lists, attribution, or tool narration.
 
-After obtaining `diff_context`, invoke the `changes-summary` subagent and use its output as the PR description.
+## Create
 
-The PR title must be derived from that same summary and formatted as a Conventional Commit:
-<type>(optional-scope): <description>
+With `eca__git`:
 
-Choose the type based on the primary intent of the change:
-- feat: new behavior
-- fix: bug fix
-- refactor: internal change without behavior change
-- perf: performance improvement
-- test: tests only
-- docs: documentation only
-- chore: maintenance/config
+1. `git push -u origin <branch>` if the branch has no upstream.
+2. Pass the body on stdin with a quoted heredoc:
 
-BRANCH REQUIREMENT:
+```bash
+gh pr create --title "<title>" --body-file - <<'EOF'
+<summary>
+EOF
+```
 
-Do not create a pull request from the default branch (main or master).
-If the current branch is main or master, stop and report:
-{"error":"refusing_to_pr_from_default_branch"}
-
-PR DESCRIPTION RULES:
-
-The PR body must be EXACTLY the output from the `changes-summary` subagent, followed by the required footer below.
-
-Do not add headings.
-Do not add explanations.
-Do not add attribution.
-Do not add file lists.
-Do not describe the tool usage.
-
+Report the PR URL.
