@@ -7,6 +7,25 @@ All agents must load the following skill by default:
 ## Review instructions
 When the user asks for a code review / PR review / diff review, use the `code-review` subagent configured in `agents/code-review.md`.
 
+After the subagent returns:
+- Summarize the findings; if there are none, say "No issues found."
+- Verify structural findings before acting: `eca__editor_references` on the cited symbol and `chiasmus_graph analysis="impact"` for the claimed callers.
+- Address critical and high findings; route fixes to the `implement` subagent. For each finding you do not act on, state why.
+- End with actions taken and findings left open.
+
+## Pull request feedback instructions
+When the user asks to handle PR review comments:
+- Fetch them with `eca__git`: `gh pr view <n> --comments` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
+- Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition`, and check blast radius with `chiasmus_graph analysis="impact"` before agreeing or disagreeing.
+- Group the outcome per comment: accept (with the planned change), reject (with evidence), or needs clarification.
+- Delegate accepted changes to `implement` in one batch, then rerun `code-review` on the result.
+
+## Delegation instructions
+- Hand subagents concrete inputs: absolute file paths, the `files` list for Chiasmus, exact lines from the diff, and the acceptance criteria. Do not make them rediscover what you already know.
+- Use the built-in `explorer` subagent for broad codebase reading that would otherwise flood this context; keep the summary, not the raw files.
+- Treat subagent output as a claim. After `implement`: `eca__editor_diagnostics`, then `qa-check`. After `code-review`: verify structural findings as described above. After `qa-check`: read the failures yourself before deciding the next step.
+- Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
+
 ## Five Whys instructions
 When the user asks for a 5 Whys analysis, use the `five-whys` subagent configured in `agents/five-whys.md`.
 
@@ -116,3 +135,21 @@ Chiasmus takes an explicit array of absolute file paths; globs are not expanded.
 ### Formal checks
 
 RBAC conflicts, config consistency, dependency version constraints, state-machine reachability: `chiasmus_formalize` → fill slots → `chiasmus_lint` → `chiasmus_verify`. When the user provides a Mermaid flowchart or state diagram, pass it directly with `chiasmus_verify solver="prolog" format="mermaid"`. `chiasmus_solve`, `chiasmus_learn`, and `chiasmus_search` are denied (remote LLM / embedding calls).
+
+## Observability and delivery tools
+
+All four servers are read-only by configuration and every call asks for approval, so make each query specific and batch independent ones in a single turn.
+
+Lanes:
+
+- Datadog: logs, metrics, monitors and monitor groups, incidents, deployment/change events, SLOs. Follow the server's own instruction to load its skill guide before the first query in a domain.
+- Sentry: a specific error — stack trace, breadcrumbs, tags, affected releases, Seer analysis. When both Datadog Error Tracking and Sentry cover the same service, use Sentry for the error's internals and Datadog for its frequency and correlation with deploys.
+- CircleCI: failed pipelines and jobs, job logs, test results, flaky tests, artifacts. Use it for CI failures before looking anywhere else.
+- Linear: issues and projects — read for context, create or update only when the user asks.
+
+Investigation flow for "why did X fail":
+
+1. Establish when: Datadog monitor state and `get_change_stories`/events around the failure; CircleCI run status if the failure is a build or deploy.
+2. Establish what: Datadog logs for the service and window; the Sentry issue if an exception is involved.
+3. Locate in code: take the failing function or endpoint from the logs or stack trace and run `chiasmus_graph analysis="path"` from the entry point to it; read only the functions on the path. Use `eca__editor_definition` on the frame's symbol for the exact implementation.
+4. Report the chain (evidence → cause → affected callers via `impact`) before proposing a fix; delegate the fix to `implement`.

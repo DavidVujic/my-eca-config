@@ -55,15 +55,4 @@ Rules:
 - Don’t assume external behavior or missing context; if you can’t prove it from the diff or a structural result, skip it.
 - Prefer fewer, higher-signal findings over many marginal ones.
 - Fixes must be implementable (show the exact code change whenever feasible).
-
-## Post-Review Actions
-
-After generating the review output, agents must:
-1. **Acknowledge Findings**: Confirm receipt of the review report and summarize the findings. If no issues are found, explicitly state: `"No issues found."`.
-2. **Prioritize Issues**: Focus on **critical** or **high-severity** findings. Address **actionable** issues (`medium` or `low` severity) as needed.
-3. **Flag and Act**: Immediately flag issues to the user. For each issue:
-   - Suggest a fix or offer to implement it.
-4. **Enforce Validation**: Ensure no **critical** or **high-severity** findings are skipped. If no action is taken on an issue, justify why in the summary.
-5. **Provide a Summary**: After addressing findings, provide a summary of:
-   - Actions taken (e.g., fixes implemented, issues flagged).
-   - Issues that remain unresolved, with justifications.
+- Do not edit files. Return the report; the primary agent decides what to act on.
