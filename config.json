@@ -124,10 +124,14 @@
     },
     "sentry": {
       "url": "https://mcp.sentry.dev/mcp"
+    },
+    "circleci": {
+      "url": "https://mcp.circleci.com/v1/mcp"
     }
   },
   "disabledTools": [
     "datadog__(?!(get|search|list|find|aggregate|analyze|check)_|monitor_groups_search$|load_datadog_skill$).*",
-    "sentry__(add|create|delete|remove|update|onboarding)_.*"
+    "sentry__(add|create|delete|remove|update|onboarding)_.*",
+    "circleci__(cancel|rerun|rollback)_.*"
   ]
 }
