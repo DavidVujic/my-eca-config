@@ -77,6 +77,7 @@ Chiasmus takes an explicit array of absolute file paths; globs are not expanded.
 ### Required uses
 
 - Task start in an unmapped repo: `chiasmus_map` (mode `overview`) before bulk `eca__read_file`. For large repos, add `chiasmus_graph analysis="hubs"` and `"communities"`.
+- Source file over ~600 lines: `chiasmus_map mode="file" path=<file>` for the outline, then `eca__read_file` with `line_offset`/`limit` on the ranges you need.
 - Before renaming or changing a function's signature or behavior: `chiasmus_graph analysis="impact" target=<fn>`. Report the affected callers.
 - Before deleting a function or module: `analysis="callers"`; confirm with `analysis="dead-code"`.
 - After moving code between modules: `analysis="cycles"` and `"layer-violation"` on the touched files.
@@ -87,21 +88,3 @@ Chiasmus takes an explicit array of absolute file paths; globs are not expanded.
 ### Formal checks
 
 RBAC conflicts, config consistency, dependency version constraints, state-machine reachability: `chiasmus_formalize` → fill slots → `chiasmus_lint` → `chiasmus_verify`. When the user provides a Mermaid flowchart or state diagram, pass it directly with `chiasmus_verify solver="prolog" format="mermaid"`. `chiasmus_solve`, `chiasmus_learn`, and `chiasmus_search` are denied (remote LLM / embedding calls).
-
-## WaveScope instructions
-
-Prefer the `wavescope` MCP tools for *intra-file* navigation and triage of large files (>200 lines), and for token-cheap structural previews. WaveScope treats source as a signal (wavelet transforms) to give multi-resolution views, complexity heatmaps, and structural boundaries — it tracks structure, not specific strings. Interpret the JSON bands/peaks/scores it returns; do not attempt the wavelet math yourself.
-
-Lane boundaries (do not let WaveScope override these):
-
-- **Maintainability / technical-debt verdicts** stay with CodeScene — Code Health remains the source of truth (see "CodeScene instructions"). Treat a WaveScope complexity heatmap as a *triage hint* for where to look, not a quality judgment.
-- **Cross-file relationships** (calls, reachability, impact, dead code, cycles) stay with Chiasmus (see "Chiasmus instructions"). WaveScope answers "where inside this file," not "what calls this across the repo."
-- **Literal text matches** stay with `eca__grep`.
-
-When to use which tool:
-
-- **"Navigate or modify a region in a large file without reading all of it"** → `query_wavelet_context`, centered on your target line. Read the Coarse band for the major section, the Medium band for surrounding signatures, the Fine band for the immediate snippet; jump via peak positions.
-- **"Where is the gnarly/bug-prone logic in this file?"** → `get_complexity_heatmap` / `get_entropy_bands`; focus on high-irregularity scores (near 1.0), skim low-entropy boilerplate. Then confirm any debt conclusion with CodeScene `code_health_review`.
-- **"Where inside the core files is the dense logic?"** → `get_important_positions` on the hub files from Chiasmus. Chiasmus picks the files; WaveScope picks the lines.
-
-Reach for WaveScope *before* pulling raw file text: it isolates the exact lines you need at a large token saving, preserving context budget.
