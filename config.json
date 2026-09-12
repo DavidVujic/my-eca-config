@@ -114,6 +114,13 @@
     },
     "codescene": {
       "command": "cs-mcp"
+    },
+    "datadog": {
+      "command": "$HOME/.local/bin/datadog_mcp_cli",
+      "args": ["--endpoint-path", "v1/mcp?toolsets=core,alerting,error-tracking"]
     }
-  }
+  },
+  "disabledTools": [
+    "datadog__(?!(get|search|list|find|aggregate|analyze|check)_|monitor_groups_search$|load_datadog_skill$).*"
+  ]
 }
