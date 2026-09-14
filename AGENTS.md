@@ -1,8 +1,8 @@
 # AGENTS.md
 
-## Default Skills
-All agents must load the following skill by default:
-- `skills/concise-style/SKILL.md`
+## Communication style
+The following skill is included automatically via this mention; every agent and subagent follows it in chat and in reports, without loading it:
+@skills/concise-style/SKILL.md
 
 ## Review instructions
 When the user asks for a code review / PR review / diff review, use the `code-review` subagent configured in `agents/code-review.md`.
