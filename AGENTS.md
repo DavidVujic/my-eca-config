@@ -107,22 +107,23 @@ Chiasmus answers structural questions about code (calls, reachability, impact, c
 
 Chiasmus matches functions by **name** across the whole file set; editor navigation resolves **bindings**. Combine them for any change to an existing symbol:
 
-1. `chiasmus_map mode="symbol" name=<symbol>` — definition sites with lines, and whether the name is ambiguous.
-2. `eca__editor_references` at that line — the exact usages to edit.
-3. `chiasmus_graph analysis="impact" target=<symbol>` — the transitive chain to report as blast radius.
+1. `chiasmus_map mode="symbol" name=<symbol>` — definition line and whether the name is ambiguous. One `eca__grep` for the name (`output_mode="content"`, whole repo) — split the direct hits into direct calls and value uses (passed as an argument, stored in a dict or list, aliased). Do not trace further by hand; that is `impact`'s job.
+2. `eca__editor_references` at the definition line — the exact usages to edit.
+3. `chiasmus_graph analysis="impact" target=<symbol>` for the direct calls. A value use creates no edge to the target in Python, Go, or Rust (TS/JS and Clojure see bare identifiers passed to calls or known higher-order forms, nothing else), so for each invisible value use run `impact` on the **enclosing function** that receives and calls it.
+4. Report the union as the blast radius, marking which callers came from step 3's repair. Never report a single `impact` result on its own: one missing edge drops every caller above it.
 
 - More than one definition in step 1 means `callers`/`impact` merge unrelated functions: edit from the references list and label the chain approximate.
-- Chiasmus misses functions passed as values (e.g. `reduce(fn, ...)`), which references catches. An empty `callers` result never proves a function is unused; confirm with `dead-code` and `editor_references`.
+- An empty `impact` or `callers` result never proves a function is unused; confirm with `dead-code` and `editor_references`.
 
 ### Building the `files` argument
 
-Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Build it with a shell `find` (exclude `.venv`, `node_modules`, `target`, `dist`, `build`) and always pass `cache=true`. The array is re-sent on every call, so scope it to the packages involved in the change; use the whole repo only for analyses that need it (`dead-code`, `cycles`, `communities`, `hubs`, `overview`).
+Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Build it with a shell `find` (exclude `.venv`, `node_modules`, `target`, `dist`, `build`) and always pass `cache=true`. Default to the whole repo: parsing is cached, and a module left out of the array drops every caller above it. Scope down only when the path array itself is too large, and then from evidence, not file names: the modules grep hit in step 1 plus the entry-point modules (`chiasmus_graph analysis="entry-points"`, or the ones the project's `AGENTS.md` names).
 
 ### Required uses
 
 - Task start in an unmapped repo: `chiasmus_map` (mode `overview`) before bulk `eca__read_file`. For large repos, add `chiasmus_graph analysis="hubs"` and `"communities"`.
 - Source file over ~600 lines: `chiasmus_map mode="file" path=<file>` for the outline, then `eca__read_file` with `line_offset`/`limit` on the ranges you need.
-- Before renaming or changing a function's signature or behavior: `chiasmus_graph analysis="impact" target=<fn>`. Report the affected callers.
+- Before renaming or changing a function's signature or behavior: the map/grep → references → `impact` chain from "Chaining with editor navigation", including the value-use repair. Report the affected callers.
 - Before deleting a function or module: `analysis="callers"`; confirm with `analysis="dead-code"`.
 - After moving code between modules: `analysis="cycles"` and `"layer-violation"` on the touched files.
 - Bug hunt "how does input reach X": `analysis="path" from=<entry> to=<X>`, then read only the functions on the path.
