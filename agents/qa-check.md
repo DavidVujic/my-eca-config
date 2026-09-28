@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Run lint and unit tests using the project's documented commands, discovering them only when the project documents none.
-model: anthropic/claude-sonnet-4-6
+model: anthropic/claude-sonnet-5
 ---
 # QA check playbook
 
