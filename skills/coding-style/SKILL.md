@@ -18,3 +18,9 @@ Applies when writing or changing code, in any language.
 ## Docstrings
 - Do write them, for modules and for functions.
 - Keep them very concise: one line where possible, stating purpose.
+
+## Blank lines inside functions
+- Separate logical parts of a function body with one blank line: setup/assignments, validation or control flow, and the return.
+- Use it where it helps scanning; short functions of two or three lines need none.
+- Do not put blank lines between every statement, and never more than one in a row.
+- The language formatter and linter win on any conflict.
