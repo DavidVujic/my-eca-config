@@ -48,7 +48,7 @@ When the user asks to create a commit or uses the `/commit` command, use the `co
 ## Implementation instructions
 All implementation work must be delegated to the `implement` subagent (configured in `agents/implement.md`). Use the `implement` subagent when the user asks to:
 - Implement a plan, write code, refactor, or apply changes.
-- Create, edit, or move files.
+- Create or edit files.
 - Write or modify tests.
 
 ## QA check instructions
