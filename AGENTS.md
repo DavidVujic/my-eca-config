@@ -46,7 +46,10 @@ Staging, committing, and pushing are the user's responsibility and part of their
 When the user asks to create a commit or uses the `/commit` command, use the `commit` subagent configured in `agents/commit.md`.
 
 ## Implementation instructions
-When the user asks to implement a plan, write code, refactor, or apply changes, use the `implement` subagent configured in `agents/implement.md`.
+All implementation work must be delegated to the `implement` subagent (configured in `agents/implement.md`). Use the `implement` subagent when the user asks to:
+- Implement a plan, write code, refactor, or apply changes.
+- Create, edit, or move files.
+- Write or modify tests.
 
 ## QA check instructions
 When the user asks to check the changes of code, or after the `implement` subagent changed code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete.
