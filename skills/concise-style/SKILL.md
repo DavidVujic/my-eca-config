@@ -28,3 +28,6 @@ Example:
 - `lint`: pass
 - `unit tests`: fail (3 failures in `tests/test_api.py`)
 ```
+
+## Right amount of detail
+**Write for the reader’s next step.** In documentation, give enough to use or maintain the thing, not the history of every decision. In chat, give enough to answer the question or support the decision at hand; expand when the user wants to explore it.
