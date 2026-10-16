@@ -24,3 +24,11 @@ Applies when writing or changing code, in any language.
 - Use it where it helps scanning; short functions of two or three lines need none.
 - Do not put blank lines between every statement, and never more than one in a row.
 - The language formatter and linter win on any conflict.
+
+## Keep code focused
+- Write a small one-off set of fields directly. Use a helper when the logic repeats or becomes complex.
+- Handle errors where they occur. For example, keep rendering errors separate from file-writing errors.
+
+## Keep tests focused
+- Orchestrator tests cover coordination and how their failures are handled.
+- Test each component's behavior in that component's own tests, not through the orchestrator.
