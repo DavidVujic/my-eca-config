@@ -93,10 +93,14 @@
           "argsMatchers": {
             "command": [
               "^git\\s+status(\\s|$)",
-              "^git\\s+diff(?!.*--no-index)(\\s|$)"
+              "^git\\s+diff(?!.*--no-index)(\\s|$)",
+              "^gh (pr|issue) list\\z",
+              "^gh pr view( [0-9]+)?\\z",
+              "^gh issue view [0-9]+\\z"
             ]
           }
         },
+        "eca__directory_tree": {},
         "eca__editor_definition": {},
         "eca__editor_references": {},
         "codescene__explain_code_health": {},
