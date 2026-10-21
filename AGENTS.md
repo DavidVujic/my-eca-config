@@ -120,7 +120,7 @@ Chiasmus matches functions by **name** across the whole file set; editor navigat
 
 ### Building the `files` argument
 
-Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Build it with a shell `find` (exclude `.venv`, `node_modules`, `target`, `dist`, `build`) and always pass `cache=true`. Default to the whole repo: parsing is cached, and a module left out of the array drops every caller above it. Scope down only when the path array itself is too large, and then from evidence, not file names: the modules grep hit in step 1 plus the entry-point modules (`chiasmus_graph analysis="entry-points"`, or the ones the project's `AGENTS.md` names).
+Chiasmus takes an explicit array of absolute file paths; globs are not expanded. Use `eca__directory_tree` to gather supported source files (exclude `.venv`, `node_modules`, `target`, `dist`, `build`) and join each entry onto its parent directories to build absolute paths. If it omits relevant files (for example hidden or gitignored ones), inspect those directories directly by absolute path, or fall back to shell `find`. Do not run structural checks on a list known to be incomplete. Always pass `cache=true`. Default to the whole repo: parsing is cached, and a module left out of the array drops every caller above it. Scope down only when the path array itself is too large, and then from evidence, not file names: the modules grep hit in step 1 plus the entry-point modules (`chiasmus_graph analysis="entry-points"`, or the ones the project's `AGENTS.md` names).
 
 ### Required uses
 

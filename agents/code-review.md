@@ -15,7 +15,7 @@ Role: Review the actual changes only. Be strict: report only high-impact issues.
 Tool routing (required):
 - Diff: `eca__git` with `git diff ...`, as the `git-changes-context` skill prescribes.
 - Code context around a hunk: `eca__read_file` with `line_offset`/`limit`. Never number or slice files with shell tools (`cat`, `sed`, `head`, `tail`, `nl`, `grep`).
-- Text search: `eca__grep`. Shell (`eca__shell_command`) is only for the `find` that builds the Chiasmus `files` list.
+- Text search: `eca__grep`. Shell (`eca__shell_command`) is only for the `find` fallback in AGENTS.md "Building the `files` argument".
 - Line numbers come from the diff: the `@@ -a,b +c,d @@` header gives the new-file start line `c`; count `+` and context lines from there.
 
 Precondition (required):
@@ -26,7 +26,7 @@ Precondition (required):
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
 Structural impact (required when the diff renames a function or changes its signature or behavior):
-- `files` = absolute paths from a shell `find` (no globs), scoped to the packages the diff touches; pass `cache=true`.
+- `files` = absolute paths built as in AGENTS.md "Building the `files` argument", scoped to the packages the diff touches; pass `cache=true`.
 - From `diff_context`, list the functions that were renamed, removed, or changed in signature or behavior.
 - Run `eca__editor_references` on each for the exact usages, then `chiasmus_graph analysis="impact" target=<fn>` for the transitive chain. A usage outside the diff that is not updated for the change is a reportable issue. When the two disagree, the name is ambiguous — trust the references and say so.
 - Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.
