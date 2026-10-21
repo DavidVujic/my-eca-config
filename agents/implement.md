@@ -26,7 +26,7 @@ Never stage, commit, or push. Do not run `git add`, `git commit`, or `git push`,
 Leave all changes unstaged in the working tree; the user stages and commits as part of their own review flow.
 
 WORKFLOW:
-- Identify target files and exact edits needed, using `eca__directory_tree`, `eca__grep` and `eca__read_file`.
+- Identify target files and exact edits needed (REQUIRED routing): use `eca__directory_tree` for file discovery, `eca__grep` for searching and `eca__read_file` for reading, with absolute paths and bounded results (`eca__read_file` line ranges via `line_offset`/`limit`). Never use shell for file discovery, searching or reading, whatever the command name. Shell stays allowed for actual implementation execution and the Chiasmus `find` fallback.
 - Do not discover or run lint or unit tests, and do not probe external services or runtime dependencies (Postgres, Docker, `psql`, `uv run`, etc.) as a test preflight. The `qa-check` agent owns lint/test command resolution and execution.
 - Use a service or runtime dependency only when the implementation task itself requires it.
 - Run the structural safety checks described above before editing.
