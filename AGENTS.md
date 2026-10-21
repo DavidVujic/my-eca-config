@@ -5,7 +5,10 @@ The following skill is included automatically via this mention; every agent and 
 @skills/concise-style/SKILL.md
 
 ## Review instructions
-When the user asks for a code review / PR review / diff review, use the `code-review` subagent configured in `agents/code-review.md`.
+When the user asks for a code review / PR review / diff review:
+1. Load the `git-changes-context` skill via `eca__skill` and run its commands with `eca__git` yourself. Subagents have no `eca__git`.
+2. If the result is `error: "NO_DIFF_FOUND"`, reply `{"status":"no_changes"}` and do not spawn `code-review`.
+3. Otherwise spawn the `code-review` subagent configured in `agents/code-review.md`, passing the raw `diff_context` and the exact `diff_source_command`.
 
 After the subagent returns:
 - Summarize the findings; if there are none, say "No issues found."
@@ -18,7 +21,7 @@ When the user asks to handle review comments on a pull request:
 - Fetch them with `eca__git`: `gh pr view <n> --comments` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
 - Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition`, and check blast radius with `chiasmus_graph analysis="impact"` before agreeing or disagreeing.
 - Group the outcome per comment: accept (with the planned change), reject (with evidence), or needs clarification.
-- Delegate accepted changes to `implement` in one batch, then rerun `code-review` on the result.
+- Delegate accepted changes to `implement` in one batch, then repeat the Review instructions (fetch a fresh diff, then rerun `code-review`) on the result.
 
 ## Delegation instructions
 - Hand subagents concrete inputs: absolute file paths, the `files` list for Chiasmus, exact lines from the diff, and the acceptance criteria. Do not make them rediscover what you already know.

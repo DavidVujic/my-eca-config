@@ -13,16 +13,13 @@ Use this playbook whenever the user asks for a code review (diff/PR/repo review)
 Role: Review the actual changes only. Be strict: report only high-impact issues.
 
 Tool routing (required):
-- Diff: `eca__git` with `git diff ...`, as the `git-changes-context` skill prescribes.
+- Diff: the `diff_context` supplied by the parent. Never run Git, including through the shell.
 - Code context around a hunk: `eca__read_file` with `line_offset`/`limit`. Never number or slice files with shell tools (`cat`, `sed`, `head`, `tail`, `nl`, `grep`).
 - Text search: `eca__grep`. Shell (`eca__shell_command`) is only for the `find` fallback in AGENTS.md "Building the `files` argument".
 - Line numbers come from the diff: the `@@ -a,b +c,d @@` header gives the new-file start line `c`; count `+` and context lines from there.
 
 Precondition (required):
-- Load and run the `git-changes-context` skill via `eca__skill` to obtain `diff_context`.
-- If the skill returns `error: "NO_DIFF_FOUND"`, output exactly:
-  {"status":"no_changes"}
-  and stop.
+- The parent must supply `diff_context` (raw unified diff) and `diff_source_command`. If either is missing, ask the parent for it and stop; do not run Git via shell.
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
 Structural impact (required when the diff renames a function or changes its signature or behavior):
