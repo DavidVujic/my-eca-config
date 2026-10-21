@@ -3,6 +3,17 @@
   "agent": {
     "code": {
       "variant": "medium"
+    },
+    "explorer": {
+      "toolCall": {
+        "approval": {
+          "allow": {
+            "linear__get_issue": {},
+            "linear__list_issues": {},
+            "linear__list_comments": {}
+          }
+        }
+      }
     }
   },
   "providers": {
