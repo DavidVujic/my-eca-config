@@ -94,6 +94,7 @@
             "command": [
               "^git\\s+status(\\s|$)",
               "^git\\s+diff(?!.*--no-index)(\\s|$)",
+              "^git diff (?:origin/(?:HEAD|main|master)|main|master)\\.\\.\\.HEAD$",
               "^gh (pr|issue) list\\z",
               "^gh pr view( [0-9]+)?\\z",
               "^gh issue view [0-9]+\\z"
