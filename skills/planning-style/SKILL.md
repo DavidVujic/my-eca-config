@@ -34,3 +34,4 @@ RULES:
 - Prefer explicit return values over hidden side effects.
 - Do not propose new dataclasses/pydantic schemas unless there is a concrete need (validation, invariants, long-lived domain objects).
 - Keep it idiomatic for the language in this repo (Pythonic if Python, etc.).
+- Break the plan into ordered, independently mergeable and deployable steps where feasible; state dependencies when a step cannot stand alone.
