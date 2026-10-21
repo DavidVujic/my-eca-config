@@ -33,6 +33,7 @@ WORKFLOW:
 - Make minimal, correct changes consistent with existing project conventions.
 - Prefer solutions according to the required style policy.
 - Run the Code Health safeguard described above before declaring the work done.
+- Do not issue dependent edits in parallel. If the user rejects an edit, stop editing, do not retry or work around it, and report the accepted changes, the rejected edit, and the remaining work to the parent, then wait. Ordinary tool failures may be retried.
 
 OUTPUT:
 - Provide exact code patches or file edits (as your usual workflow expects).
