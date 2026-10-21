@@ -1,6 +1,6 @@
 ---
 name: qa-check
-description: "Run lint and unit tests. Uses a project QA skill or the commands documented in the project's AGENTS.md/rules when present; otherwise discovers them in one shell call from Justfile, Makefile, pyproject.toml or package.json."
+description: "Run lint and unit tests. Uses a project QA skill or the commands documented in the project's AGENTS.md/rules; asks the user for any missing command instead of guessing."
 ---
 
 # QA Check Skill
@@ -9,7 +9,7 @@ Run linting and unit tests after code changes and report the result. Never auto-
 
 ## Step 1 — Commands documented by the project
 
-Check these project-side sources in order; the first that yields runnable commands wins, then skip to Step 3.
+Check these project-side sources in order; the first that yields runnable commands wins for each check (lint, unit tests).
 
 1. A project skill: the available skills include one whose description covers this project's testing, linting or QA (projects ship these in `.agents/skills` or `.eca/skills`). Load it with `eca__skill` and follow it.
 2. Project instructions already in context: the project's `AGENTS.md` or `.eca/rules` state how to lint or run unit tests, in any wording.
@@ -17,34 +17,24 @@ Check these project-side sources in order; the first that yields runnable comman
 Rules:
 - Use only commands that appear verbatim in the project's text (backticks or a code block). Do not compose a command from prose.
 - Prefer the unit-test command over a general test command when both are documented.
-- If the sources mention tests but give no runnable command, treat them as absent and continue to Step 2.
+- If the sources mention tests but give no runnable command, treat the command as missing.
 
-## Step 2 — Otherwise, discover in one call
+## Step 2 — Ask for missing commands
 
-Run exactly this single shell command from the repository root (`git rev-parse --show-toplevel`):
+For each of lint and unit tests without a documented command, ask the user once for the command via `eca__ask_user` if available; otherwise return the missing command(s) to the parent agent to ask. Offer skipping as an option ("not applicable").
 
-```bash
-echo '--- files'; ls justfile Justfile Makefile pyproject.toml setup.py package.json pnpm-lock.yaml yarn.lock .venv/bin/activate venv/bin/activate 2>/dev/null; \
-echo '--- recipes'; grep -hE '^(lint|test|unit-test)([[:space:]][^:]*)?:' justfile Justfile Makefile 2>/dev/null; \
-echo '--- pyproject'; grep -E '^\[tool\.(ruff|pytest|flake8|pylint)' pyproject.toml 2>/dev/null; \
-echo '--- scripts'; python3 -c 'import json;print(json.load(open("package.json")).get("scripts",{}))' 2>/dev/null; \
-echo '--- test dirs'; ls -d tests/unit test/unit tests/integration test/integration 2>/dev/null
-```
-
-Choose from the output:
-
-- setup prefix: `source .venv/bin/activate &&` or `source venv/bin/activate &&` if listed. JS package manager: `pnpm` if `pnpm-lock.yaml`, `yarn` if `yarn.lock`, else `npm`.
-- lint, first match: `just lint` → `make lint` → `ruff check .` (`[tool.ruff]`) → `flake8` → `pylint .` → `<pm> run lint` (script present) → skip.
-- unit tests, first match: `just unit-test` → `just test` → `make unit-test` → `make test` → pytest (`[tool.pytest…]`): `pytest tests/unit` or `pytest test/unit` if the dir exists, else `pytest --ignore=<integration dir>` if one exists, else `pytest` → `python -m unittest` (Python project without pytest) → `<pm> run test:unit` → `<pm> run test` → skip.
-
-If `--- files` listed nothing, report "Unable to determine project type" and stop.
+Rules:
+- Never treat a missing command as skipped before the user confirms.
+- Do not search the repository for commands, and do not guess or compose one (no Justfile, Makefile, `pyproject.toml` or `package.json` probing).
+- Run only commands documented verbatim by the project or given explicitly by the user.
+- A check the user marks as not applicable is `skipped`.
 
 ## Step 3 — Run and report
 
-Run lint, then unit tests, from the repository root with the setup prefix. Report:
+Run lint, then unit tests, from the repository root. Report:
 
 - `lint`: pass / fail / skipped — with the tool's error output on failure
 - `unit tests`: pass / fail / skipped — with the failing test output on failure
-- The commands used and their source: project skill, project instructions, or discovery.
+- The commands used and their source: project skill, project instructions, or user.
 
 If either check failed, say the errors need review before committing.

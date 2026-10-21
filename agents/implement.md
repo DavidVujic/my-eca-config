@@ -10,7 +10,7 @@ Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before 
 All generated code MUST follow both policies.
 
 STRUCTURAL SAFETY (REQUIRED for languages Chiasmus supports, unless the edit stays inside one function body and changes no name or signature):
-`files` = absolute paths from a shell `find` (no globs), scoped to the packages involved; pass `cache=true`.
+`files` = absolute paths built as in AGENTS.md "Building the `files` argument", scoped to the packages involved; pass `cache=true`.
 - Before renaming a function or changing its signature or behavior: `eca__editor_references` for the exact usages to update, then `chiasmus_graph analysis="impact" target=<fn>` for the transitive chain. Update or verify every usage the references report.
 - Before deleting a function or module: `analysis="callers"`; confirm with `analysis="dead-code"` and `eca__editor_references`.
 - After moving code between modules: `analysis="cycles"` and `"layer-violation"` on the touched files.
@@ -26,7 +26,9 @@ Never stage, commit, or push. Do not run `git add`, `git commit`, or `git push`,
 Leave all changes unstaged in the working tree; the user stages and commits as part of their own review flow.
 
 WORKFLOW:
-- Identify target files and exact edits needed.
+- Identify target files and exact edits needed, using `eca__directory_tree`, `eca__grep` and `eca__read_file`.
+- Do not discover or run lint or unit tests, and do not probe external services or runtime dependencies (Postgres, Docker, `psql`, `uv run`, etc.) as a test preflight. The `qa-check` agent owns lint/test command resolution and execution.
+- Use a service or runtime dependency only when the implementation task itself requires it.
 - Run the structural safety checks described above before editing.
 - Make minimal, correct changes consistent with existing project conventions.
 - Prefer solutions according to the required style policy.
