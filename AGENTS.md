@@ -4,6 +4,14 @@
 The following skill is included automatically via this mention; every agent and subagent follows it in chat and in reports, without loading it:
 @skills/concise-style/SKILL.md
 
+## Tool routing
+Applies to the parent agent and every subagent.
+
+- File discovery, text search, and file reads: `eca__directory_tree`, `eca__grep`, `eca__read_file` with absolute paths, also for repos outside the workspace. Do not use shell `cd`, `ls`, `grep`, `head` chains for this.
+- Do not probe runtime services or local infrastructure during routine discovery or QA preflight; check the environment only when the user's task requires that information.
+- When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback, a runtime task), make one purpose-specific call; do not chain unrelated commands.
+- Git and `gh` go through `eca__git`; the tool instructions below still apply.
+
 ## Review instructions
 When the user asks for a code review / PR review / diff review:
 1. Load the `git-changes-context` skill via `eca__skill` and run its commands with `eca__git` yourself. Subagents have no `eca__git`.
