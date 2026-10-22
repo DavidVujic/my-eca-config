@@ -11,6 +11,8 @@ Use this playbook when the user asks for a check of produced or modified code.
 
 Load and execute the `qa-check` skill; it resolves the lint and unit-test commands (project-documented, else asked from the user) and runs them. Do not discover or guess commands. For a missing command, ask via `eca__ask_user` if available; otherwise return the missing command(s) to the parent agent to ask, and never treat them as skipped before the user confirms.
 
+Do not probe runtime services or local infrastructure as test preflight; run the documented lint and unit-test commands directly.
+
 The QA subagent handles lint and unit tests; leave any optional Git status, diff, or whitespace checks to the parent agent.
 
 OUTPUT:
