@@ -1,5 +1,5 @@
 {
-  "defaultModel": "anthropic/claude-fable-5-1",
+  "defaultModel": "openai/gpt-6-sol",
   "agent": {
     "code": {
       "variant": "medium"
