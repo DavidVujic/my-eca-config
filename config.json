@@ -93,10 +93,13 @@
           "argsMatchers": {
             "command": [
               "^git\\s+status(\\s|$)",
+              "^git status --short --branch\\z",
+              "^git log -1 --oneline --decorate\\z",
               "^git\\s+diff(?!.*--no-index)(\\s|$)",
               "^git diff (?:origin/(?:HEAD|main|master)|main|master)\\.\\.\\.HEAD$",
               "^gh (pr|issue) list\\z",
               "^gh pr view( [0-9]+)?\\z",
+              "^gh pr view [0-9]+ --comments --repo [A-Za-z0-9._-]+/[A-Za-z0-9._-]+\\z",
               "^gh issue view [0-9]+\\z"
             ]
           }

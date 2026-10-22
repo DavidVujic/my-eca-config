@@ -18,7 +18,7 @@ After the subagent returns:
 
 ## PR review comments instructions
 When the user asks to handle review comments on a pull request:
-- Fetch them with `eca__git`: `gh pr view <n> --comments` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
+- Fetch them with `eca__git`: `gh pr view <n> --comments --repo <owner>/<repo>` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
 - Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition`, and check blast radius with `chiasmus_graph analysis="impact"` before agreeing or disagreeing.
 - Group the outcome per comment: accept (with the planned change), reject (with evidence), or needs clarification.
 - Delegate accepted changes to `implement` in one batch, then repeat the Review instructions (fetch a fresh diff, then rerun `code-review`) on the result.
@@ -44,6 +44,7 @@ Staging, committing, and pushing are the user's responsibility and part of their
 
 - Never run `git add`, `git commit`, `git push`, or any command that stages, commits, or pushes.
 - Do not ask whether to stage, commit, or push. When the work is done, report the changed files and end the turn.
+- When both are needed, run `git status --short --branch` and `git log -1 --oneline --decorate` as separate calls; do not join them with `;`.
 - The only exceptions are the `commit` and `pull-request` subagents, and only when the user explicitly asks for a commit or a pull request.
 
 ## Commit instructions
