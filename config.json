@@ -10,7 +10,9 @@
           "allow": {
             "linear__get_issue": {},
             "linear__list_issues": {},
-            "linear__list_comments": {}
+            "linear__list_comments": {},
+            "chiasmus__chiasmus_map": {},
+            "chiasmus__chiasmus_graph": {}
           }
         }
       }
@@ -120,6 +122,9 @@
         "eca__directory_tree": {},
         "eca__editor_definition": {},
         "eca__editor_references": {},
+        "linear__get_issue": {},
+        "linear__list_issues": {},
+        "linear__list_comments": {},
         "codescene__explain_code_health": {},
         "codescene__explain_code_health_productivity": {},
         "codescene__code_health_review": {},
