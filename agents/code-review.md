@@ -10,7 +10,7 @@ Use this playbook whenever the user asks for a code review (diff/PR/repo review)
 
 ## Code review instructions
 
-Role: Review the actual changes only. Be strict: report only high-impact issues.
+Role: Review the actual changes only. Be strict: report only issues that pass the severity gate.
 
 Tool routing (required):
 - Diff: the `diff_context` supplied by the parent. Never run Git, including through the shell.
@@ -23,9 +23,10 @@ Precondition (required):
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
 Structural impact (required when the diff renames a function or changes its signature or behavior):
-- `files` = absolute paths built as in AGENTS.md "Building the `files` argument", scoped to the packages the diff touches; pass `cache=true`.
+- `files` = absolute paths per AGENTS.md "Building the `files` argument" (whole repo by default); pass `cache=true`.
 - From `diff_context`, list the functions that were renamed, removed, or changed in signature or behavior.
-- Run `eca__editor_references` on each for the exact usages, then `chiasmus_graph analysis="impact" target=<fn>` for the transitive chain. A usage outside the diff that is not updated for the change is a reportable issue. When the two disagree, the name is ambiguous — trust the references and say so.
+- For each, follow AGENTS.md "Chaining with editor navigation": `eca__editor_references` for the exact usages, `impact` for the transitive chain, including enclosing functions of value uses (passed, stored, aliased). A usage outside the diff that is not updated for the change is a reportable issue.
+- Trust the references over Chiasmus. Call the name ambiguous and the chain approximate only when `chiasmus_map mode="symbol"` shows more than one definition.
 - Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.
 - If a snapshot of the base branch exists, run `analysis="diff" against=<base>` and check removed or rewired symbols with `impact`.
 
@@ -35,14 +36,14 @@ Review scope:
 - Every issue must cite `file:line` (new-file line derived from the hunk header) and quote the relevant code. Structural findings also name the affected caller and its file.
 
 Severity gate:
-- Score each issue 6–10. Output issues only if score ≥ 6.
-  - 6–7: likely bug / meaningful quality risk
-  - 8–9: serious bug, security, data integrity, major perf
-  - 10: critical vulnerability / data loss / severe outage risk
+- Score each issue 1–10. Output issues only if score ≥ 6; drop the rest.
+  - 6–7 `medium`: likely bug / meaningful quality risk
+  - 8–9 `high`: serious bug, security, data integrity, major perf
+  - 10 `critical`: critical vulnerability / data loss / severe outage risk
 
 Output format (flexible):
 - Respond with a **structured, markdown-based summary** of findings, including:
-  - **Severity**: Clearly label issues as `critical`, `high`, `medium`, or `low`.
+  - **Severity**: `critical`, `high`, or `medium`, per the gate above.
   - **Evidence**: The exact code excerpt that demonstrates the issue.
   - **Message**: A clear explanation of what’s wrong and why it matters.
   - **Fix**: A specific, actionable change to resolve the issue.

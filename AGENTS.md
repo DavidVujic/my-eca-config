@@ -10,18 +10,19 @@ Applies to the parent agent and every subagent.
 - File discovery, text search, and file reads: `eca__directory_tree`, `eca__grep`, `eca__read_file` with absolute paths, also for repos outside the workspace. Do not use shell `cd`, `ls`, `grep`, `head` chains for this.
 - Do not probe runtime services or local infrastructure during routine discovery or QA preflight; check the environment only when the user's task requires that information.
 - When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback, a runtime task), make one purpose-specific call; do not chain unrelated commands.
-- Git and `gh` go through `eca__git`; the tool instructions below still apply.
+- Git and `gh` go through `eca__git`, which only the parent agent has. Every Git and `gh` command is parent-only; subagents never run Git or `gh`, including through the shell. The parent supplies diffs and other Git output to subagents.
 
 ## Review instructions
 When the user asks for a code review / PR review / diff review:
-1. Load the `git-changes-context` skill via `eca__skill` and run its commands with `eca__git` yourself. Subagents have no `eca__git`.
-2. If the result is `error: "NO_DIFF_FOUND"`, reply `{"status":"no_changes"}` and do not spawn `code-review`.
+1. Load the `git-changes-context` skill via `eca__skill` and run it with `eca__git` yourself, in `worktree` mode (committed, staged, and unstaged tracked changes). Use `branch` mode only when the user asks to review just the committed branch or PR.
+2. If the result is `error: "NO_DIFF_FOUND"`, reply `{"status":"no_changes"}` with the reported scope and do not spawn `code-review`.
 3. Otherwise spawn the `code-review` subagent configured in `agents/code-review.md`, passing the raw `diff_context` and the exact `diff_source_command`.
+4. Tell the user which untracked files, if any, were excluded from the review.
 
 After the subagent returns:
 - Summarize the findings; if there are none, say "No issues found."
 - Spot-check findings that name callers outside the diff with `eca__editor_references` before acting on them.
-- Address critical and high findings; route fixes to the `implement` subagent. For each finding you do not act on, state why.
+- Address critical and high findings; route fixes to the `implement` subagent. For each finding you do not act on, including every medium one, state why.
 - End with actions taken and findings left open.
 
 ## PR review comments instructions
@@ -34,15 +35,35 @@ When the user asks to handle review comments on a pull request:
 ## Delegation instructions
 - Hand subagents concrete inputs: absolute file paths, the `files` list for Chiasmus, exact lines from the diff, and the acceptance criteria. Do not make them rediscover what you already know.
 - Use the built-in `explorer` subagent for broad codebase reading that would otherwise flood this context; keep the summary, not the raw files.
-- Treat subagent output as a claim. After `implement`: `eca__editor_diagnostics`, then the `qa-check` subagent when code changed. After `code-review`: the spot-check described above. After `qa-check`: read the failures yourself before deciding the next step.
+- Treat subagent output as a claim. After `implement`: `eca__editor_diagnostics`, then the `qa-check` subagent when code changed. After `code-review`: the spot-check described above. After `qa-check`: handle missing commands as in "QA check instructions", and read the failures yourself before deciding the next step.
 - Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
 - If `implement` reports a user-rejected edit, do not retry automatically. Use the user's existing correction or ask via `eca__ask_user`, then resume the same subagent with the `chat_id` from `spawn_agent`. If it cannot be resumed, spawn a new `implement` with a handoff and the current file state.
 
 ## Changes summary instructions
-When the user asks for a changes summary, use the `changes-summary` subagent configured in `agents/changes-summary.md`.
+When the user asks for a changes summary:
+1. Run the `git-changes-context` skill in `branch` mode with `eca__git`; use `worktree` mode only when the user asks about uncommitted changes.
+2. If the result is `NO_DIFF_FOUND`, reply `{"status":"no_changes"}` and do not spawn the subagent.
+3. Otherwise spawn `changes-summary` (`agents/changes-summary.md`) with the raw `diff_context` and `diff_source_command`.
 
 ## Pull Request instructions
-When the user asks to make a pull request, use the `pull-request` subagent configured in `agents/pull-request.md`.
+Only when the user explicitly asks for a pull request, the parent runs this with `eca__git`:
+1. Run `git status --short --branch`. If the branch is `main`, `master`, or detached, stop and report `{"error":"refusing_to_pr_from_default_branch"}`. Note any uncommitted or untracked changes as not part of the PR.
+2. Run the `git-changes-context` skill in `branch` mode. On `NO_DIFF_FOUND`, reply `{"status":"no_changes"}` and stop.
+3. Code Health gate: for AI-touched code, load the `safeguarding-ai-generated-code` skill via `eca__skill` first. Run `codescene__analyze_change_set` with `base_ref` set to the left side of `...` in `diff_source_command`. On a degradation, stop and report the findings; the user decides whether to refactor first or accept the risk explicitly.
+4. Spawn `pull-request` (`agents/pull-request.md`) with the raw `diff_context` and `diff_source_command`; it returns the title and body.
+5. If the status line shows no upstream or `ahead`, run `git push -u origin '<branch>'`.
+6. Create the PR with the body on stdin via a quoted heredoc, then report the PR URL:
+
+```bash
+gh pr create --title '<title>' --body-file - <<'EOF'
+<body>
+EOF
+```
+
+Subagent text must not be parsed by the shell. Before calling `eca__git`:
+- Branch: stop unless it matches `^[A-Za-z0-9._/-]+$`.
+- Title: one line with no control characters, else stop; single-quote it, writing each `'` as `'\''`.
+- Body: keep it verbatim; if a line of it is exactly `EOF`, use another quoted delimiter that no body line equals.
 
 ## Planning instructions
 When the user asks to plan an implementation or requests a step-by-step plan before coding, load the `planning-style` skill configured in `skills/planning-style/SKILL.md` via `eca__skill` before writing the plan.
@@ -53,10 +74,10 @@ Staging, committing, and pushing are the user's responsibility and part of their
 - Never run `git add`, `git commit`, `git push`, or any command that stages, commits, or pushes.
 - Do not ask whether to stage, commit, or push. When the work is done, report the changed files and end the turn.
 - When both are needed, run `git status --short --branch` and `git log -1 --oneline --decorate` as separate calls; do not join them with `;`.
-- The only exceptions are the `commit` and `pull-request` subagents, and only when the user explicitly asks for a commit or a pull request.
+- The only exceptions are the parent's workflows in "Commit instructions" and "Pull Request instructions", and only when the user explicitly asks for a commit or a pull request. A request to implement or change code is not such a request. The `commit` and `pull-request` subagents only draft text.
 
 ## Commit instructions
-When the user asks to create a commit or uses the `/commit` command, use the `commit` subagent configured in `agents/commit.md`.
+When the user asks to create a commit or uses the `/commit` command, load the `commit` skill via `eca__skill` and run it yourself. It reads the staged diff, runs the Code Health gate, has the `commit` subagent (`agents/commit.md`) draft the message from the raw staged diff and the user's hint, and commits with `eca__git`.
 
 ## Implementation instructions
 All implementation work must be delegated to the `implement` subagent (configured in `agents/implement.md`). Use the `implement` subagent when the user asks to:
@@ -65,15 +86,17 @@ All implementation work must be delegated to the `implement` subagent (configure
 - Write or modify tests.
 
 ## QA check instructions
-When the user asks to check the changes of code, or after the `implement` subagent changed code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete.
+When the user asks to check the changes of code, or after the `implement` subagent changed code, use the `qa-check` subagent configured in `agents/qa-check.md` to run linting and unit tests before considering the work complete. The `qa-check` skill owns command resolution.
+
+If `qa-check` returns missing lint or unit-test commands (subagents have no `eca__ask_user`), ask the user once per missing command via `eca__ask_user`, offering "not applicable". Then resume the same subagent with the `chat_id` from `spawn_agent` and the answers; if it cannot be resumed, spawn a new `qa-check` with the answered commands. Mark a check skipped only when the user chose "not applicable".
 
 ## CodeScene instructions
 
-Treat Code Health as the source of truth for maintainability. Aim for Code Health 10.0 on AI-touched code; 9+ is not "good enough." When Code Health regresses or violates goals, refactor — do not declare done. When in doubt, call a CodeScene MCP tool instead of guessing.
+Treat Code Health as the source of truth for maintainability. Aim for Code Health 10.0 on AI-touched code; 9+ is not "good enough." When Code Health regresses or falls short of 10.0, refactor — do not declare done. Accept a regression or a partial uplift only when the user explicitly accepts it, and state it in the report. When in doubt, call a CodeScene MCP tool instead of guessing.
 
-### Safeguard AI-generated code (mandatory before commit / PR)
+### Safeguard AI-generated code (mandatory at handoff, commit, and PR)
 
-Before recommending a commit or opening a PR on AI-touched code, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow it. It gates changes with `pre_commit_code_health_safeguard` (staged files) and `analyze_change_set` (branch vs base ref), and falls back to `code_health_review` on any regression.
+Before handing off implementation work, recommending a commit, or opening a PR on AI-touched code, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow it. It gates changes with `code_health_review` per modified file, `pre_commit_code_health_safeguard` (staged and unstaged modified files) at handoff and commit, and `analyze_change_set` (branch vs base ref) for PRs. Never skip a gate; if a CodeScene tool errors, report that.
 
 ### Guide refactoring
 
