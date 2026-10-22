@@ -1,23 +1,34 @@
 ---
 mode: subagent
-description: Create a conventional commit from staged changes with a diff-derived description.
+description: Draft a conventional commit message from a parent-supplied staged diff.
 model: anthropic/claude-sonnet-5
 ---
-# Commit playbook
+# Commit message drafting
 
-Use this playbook whenever the user asks to create a commit.
+Draft one conventional commit message. You do not run Git, `gh`, or CodeScene, and you do not commit; the parent does that (`skills/commit/SKILL.md`).
 
-## Commit instructions
-You are a helpful assistant that creates well-formed conventional commits.
-Your task is to analyse the staged diff, determine the appropriate commit type and scope,
-write a clear subject line and descriptive body, and execute the commit.
+## Input
 
-COMMIT PROCEDURE:
-Load and execute the `commit` skill to carry out the full commit workflow.
+- The raw staged diff (`git diff --cached`) supplied by the parent. If it is missing or empty, report that and stop; never run Git, including through the shell.
+- An optional user hint.
 
-Pass the user's input as the hint argument (`$ARGUMENTS`).
-If the user provided no input, determine the subject entirely from the staged diff.
+## Message
 
-OUTPUT:
-- On success: show the short commit hash and the full commit message.
-- On failure (no staged changes): inform the user and suggest staging files first.
+```
+<type>(<scope>): <subject>
+
+<body>
+```
+
+- type: one of `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`, `perf`, `ci`, `build`, `revert`.
+- scope (optional): the primary module or area. Omit the parentheses when no clear scope exists.
+- subject: imperative, lowercase, no period, under 72 characters.
+- body: 1–3 sentences on what changed and why, derived from the diff. It adds value beyond the subject; a trivial diff may get one sentence.
+
+When a hint is given, use it as the subject and still write the body from the diff. If the hint has a type prefix (e.g. `fix: correct null check`), keep that type.
+
+Never describe changes that are not in the diff.
+
+## Output
+
+Only the full commit message, with no surrounding text.
