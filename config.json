@@ -12,7 +12,8 @@
             "linear__list_issues": {},
             "linear__list_comments": {},
             "chiasmus__chiasmus_map": {},
-            "chiasmus__chiasmus_graph": {}
+            "chiasmus__chiasmus_graph": {},
+            "eca__editor_references": {}
           }
         }
       }
