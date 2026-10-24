@@ -39,10 +39,10 @@ Example:
 
 ## Reply drafts
 When the user asks for a reply to feedback (a review comment, message, or
-email), write a ready-to-send draft in the user's natural voice, addressed to
-the recipient. Do not write meta-analysis of the feedback in place of the
-draft. Keep your reasoning separate from the draft, and include it only when
-the user asks for it.
+email), write a ready-to-send draft addressed to the recipient, in plain,
+concise language that fits the recipient and context. Do not write
+meta-analysis of the feedback in place of the draft. Keep your reasoning
+separate from the draft, and include it only when the user asks for it.
 
 ## Right amount of detail
 **Write for the reader’s next step.**
