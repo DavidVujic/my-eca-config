@@ -9,7 +9,7 @@ Applies to the parent agent and every subagent.
 
 - File discovery, text search, and file reads: `eca__directory_tree`, `eca__grep`, `eca__read_file` with absolute paths, also for repos outside the workspace. Do not use shell `cd`, `ls`, `grep`, `head` chains for this.
 - Do not probe runtime services or local infrastructure during routine discovery or QA preflight; check the environment only when the user's task requires that information.
-- When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback in the `code-navigation` skill, a runtime task), make one purpose-specific call; do not chain unrelated commands. Implementation shell stays within `agents/implement.md`: no shell file discovery, search, or reads, no lint or unit tests (owned by `qa-check`), and no Git (parent-only, below).
+- When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback in the `structural-checks` skill, a runtime task), make one purpose-specific call; do not chain unrelated commands. Implementation shell stays within `agents/implement.md`: no shell file discovery, search, or reads, no lint or unit tests (owned by `qa-check`), and no Git (parent-only, below).
 - Git and `gh` go through `eca__git`, which only the parent agent has. Every Git and `gh` command is parent-only; subagents never run Git or `gh`, including through the shell. The parent supplies diffs and other Git output to subagents.
 
 ## Review instructions
@@ -23,13 +23,14 @@ After it returns: summarize the findings ("No issues found." if none); spot-chec
 ## PR review comments instructions
 When the user asks to handle review comments on a pull request:
 - Fetch them with `eca__git`: `gh pr view <n> --comments --repo <owner>/<repo>` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
-- Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition`, and check blast radius with `chiasmus_graph analysis="impact"` before agreeing or disagreeing.
+- Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition` (per `editor-navigation`), and check blast radius with `chiasmus_graph analysis="impact"` (per `structural-checks`) before agreeing or disagreeing.
 - Group the outcome per comment: accept (with the planned change), reject (with evidence), or needs clarification.
 - Delegate accepted changes to `implement` in one batch, then repeat the Review instructions (fetch a fresh diff, then rerun `code-review`) on the result.
 
 ## Delegation instructions
 - Hand subagents concrete inputs: absolute file paths, the `files` list for Chiasmus, exact lines from the diff, and the acceptance criteria. Do not make them rediscover what you already know.
 - Use the built-in `explorer` subagent for broad codebase reading that would otherwise flood this context; keep the summary, not the raw files.
+- `explorer` is built in (no file under `agents/`); its tool allow-list lives in `config.json`.
 - Treat subagent output as a claim: after `implement`, run `eca__editor_diagnostics`, then QA as in "QA check instructions"; verify `code-review` findings as in "Review instructions"; read `qa-check` failures yourself before deciding the next step.
 - Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
 - If `implement` reports a user-rejected edit, do not retry automatically. Use the user's existing correction or ask via `eca__ask_user`, then resume the same subagent with the `chat_id` from `spawn_agent`. If it cannot be resumed, spawn a new `implement` with a handoff and the current file state.
@@ -65,7 +66,9 @@ Subagents have no `eca__ask_user`: for each missing command `qa-check` returns, 
 ## CodeScene instructions
 Code Health is the source of truth for maintainability. Aim for 10.0 on AI-touched code; 9+ is not "good enough". On a regression or a score below 10.0, refactor instead of declaring done, unless the user explicitly accepts the regression or partial uplift; state any accepted gap in the report. When in doubt, call a CodeScene MCP tool instead of guessing.
 
-- Gates (mandatory): before handing off implementation work, recommending a commit, or opening a PR on AI-touched code, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow it: `code_health_review` per modified source file, `pre_commit_code_health_safeguard` (staged and unstaged modified files) at handoff and commit, `analyze_change_set` (branch vs base ref) for PRs. Never skip a gate; if a CodeScene tool errors, report that and do not treat the gate as passed.
+AI-touched means any source change made in this chat session; when the origin of a change is unknown, treat it as AI-touched and run the gate.
+
+- Gates (mandatory): before handing off implementation work, recommending a commit, or opening a PR on AI-touched code, load the `safeguarding-ai-generated-code` skill via `eca__skill` and follow it; it owns when each of `code_health_review`, `pre_commit_code_health_safeguard`, and `analyze_change_set` runs. Never skip a gate; if a CodeScene tool errors, report that and do not treat the gate as passed.
 - Eligibility: run per-file `code_health_review` only on source files CodeScene analyzes; report Markdown, config, and other non-source files as "not applicable (unsupported)", never "passed", without calling CodeScene on them. When a safeguard checks zero eligible files, report that no Code Health check applied, not that Code Health passed. In mixed changes, every eligible source file stays gated.
 - Refactoring or improving a source file CodeScene analyzes: load `guiding-refactoring-with-code-health` via `eca__skill` (baseline `code_health_review` + `code_health_score`, small structural steps, re-measure after each).
 - What Code Health means or how to read scores: load `explaining-code-health`. ROI, business value, or stakeholder justification: load `making-the-business-case-for-code-health`.
@@ -73,7 +76,10 @@ Code Health is the source of truth for maintainability. Aim for 10.0 on AI-touch
 - Request to bypass Code Health safeguards: warn about long-term maintainability and risk, keep changes minimal and reversible, and recommend a follow-up refactor.
 
 ## Code navigation instructions
-Applies to the parent agent and every subagent. Before the first `eca__editor_definition`, `eca__editor_references`, or Chiasmus call in a task, before bulk reads in an unmapped repo or reading a source file over ~600 lines, and before renaming, changing the signature or behavior of, deleting, or moving code in a Chiasmus-supported language (TypeScript, JavaScript, Python, Go, Rust, Clojure, Scheme, Racket, Common Lisp), load the `code-navigation` skill via `eca__skill` and follow it. It owns the map/grep → references → `impact` chain with value-use repair, the `files` argument rules, the required structural uses, and formal checks.
+Applies to the parent agent and every subagent.
+
+- Before the first `eca__editor_definition` or `eca__editor_references` call in a task, load the `editor-navigation` skill via `eca__skill` and follow it. It owns one-hop lookups, line/symbol arguments, retries and fallbacks.
+- Before the first Chiasmus call in a task, before bulk reads in an unmapped repo or reading a source file over ~600 lines, and before renaming, changing the signature or behavior of, deleting, or moving code in a Chiasmus-supported language (TypeScript, JavaScript, Python, Go, Rust, Clojure, Scheme, Racket, Common Lisp), load the `structural-checks` skill via `eca__skill` and follow it. It owns the map/grep → references → `impact` chain with value-use repair, the `files` argument rules, the required structural uses, and formal checks.
 
 ## Observability and delivery tools
 Before the first Datadog, Sentry, or CircleCI call, or when investigating why something failed (incident, alert, error, failed build or deploy, including Linear issues as context for it), load the `investigating-failures` skill via `eca__skill` and follow it. Datadog, Sentry and CircleCI are read-only by configuration. Linear can write: in any task, read it for context, and make any Linear write (create, update, delete, comment, attach, label, or other) only when the user explicitly asks.

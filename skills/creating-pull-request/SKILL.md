@@ -11,7 +11,7 @@ Run by the parent agent, and only when the user explicitly asks for a pull reque
 
 1. Run `git status --short --branch`. If the branch is `main`, `master`, or detached, stop and report `{"error":"refusing_to_pr_from_default_branch"}`. Note any uncommitted or untracked changes as not part of the PR.
 2. Run the `git-changes-context` skill in `branch` mode. On `NO_DIFF_FOUND`, reply `{"status":"no_changes"}` and stop.
-3. Code Health gate: for AI-touched code, load the `safeguarding-ai-generated-code` skill via `eca__skill` first. Run `codescene__analyze_change_set` with `base_ref` set to the left side of `...` in `diff_source_command`. On a degradation, stop and report the findings; the user decides whether to refactor first or accept the risk explicitly.
+3. Code Health gate: run the gate per the AI-touched definition in `AGENTS.md` (unknown origin counts as AI-touched): load the `safeguarding-ai-generated-code` skill via `eca__skill` first. Run `codescene__analyze_change_set` with `base_ref` set to the left side of `...` in `diff_source_command`. On a degradation, stop and report the findings; the user decides whether to refactor first or accept the risk explicitly.
 4. Spawn `pull-request` (`agents/pull-request.md`) with the raw `diff_context` and `diff_source_command`; it returns the title and body.
 5. Validate the inputs before any `git push` or `gh pr create`. Subagent text must not be parsed by the shell:
    - Branch: stop unless it matches `^[A-Za-z0-9._/-]+$`.

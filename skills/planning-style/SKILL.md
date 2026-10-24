@@ -12,7 +12,7 @@ Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before 
 Apply it as a design constraint (architecture and data flow), not as code-generation.
 
 STRUCTURAL CONTEXT (REQUIRED for languages Chiasmus supports):
-Load the `code-navigation` skill via `eca__skill` first. `files` = absolute paths per its "Building the `files` argument" section (whole repo by default); pass `cache=true`.
+Load the `structural-checks` and `editor-navigation` skills via `eca__skill` first. `files` = absolute paths per its "Building the `files` argument" section (whole repo by default); pass `cache=true`.
 - Run `chiasmus_map` (mode `overview`) if the repo is not mapped this session.
 - For each function the plan changes or removes, follow its "Chaining with editor navigation" section (references, then `impact`, including value uses) for the blast radius.
 
