@@ -8,7 +8,7 @@ STYLE POLICY (REQUIRED):
 Load the `fp-idiomatic-style` and `coding-style` skills via `eca__skill` before writing or modifying any code.
 All generated code MUST follow both policies.
 
-STRUCTURAL SAFETY (REQUIRED for languages Chiasmus supports, unless the edit stays inside one function body and changes no name, signature, or observable behavior, e.g. formatting, renaming a local, or extracting a private helper with the same result):
+STRUCTURAL SAFETY (REQUIRED for languages Chiasmus supports, unless the edit stays inside one function body and changes no name, signature, or observable behavior, e.g. formatting or renaming a local):
 Load the `structural-checks` skill (and `editor-navigation` for the `eca__editor_references` calls) via `eca__skill` before these checks. `files` = absolute paths per its "Building the `files` argument" section (whole repo by default); pass `cache=true`.
 - Before renaming a function or changing its signature or behavior: `eca__editor_references` for the exact usages to update, then `chiasmus_graph analysis="impact" target=<fn>` for the transitive chain. Update or verify every usage the references report.
 - Before deleting a function or module: `analysis="callers"`; confirm with `analysis="dead-code"` and `eca__editor_references`.
