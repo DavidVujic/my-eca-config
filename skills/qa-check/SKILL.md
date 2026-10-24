@@ -21,7 +21,7 @@ Rules:
 
 ## Step 2 — Ask for missing commands
 
-For each of lint and unit tests without a documented command, ask the user once for the command via `eca__ask_user` if available; otherwise return the missing command(s) to the parent agent to ask. Offer skipping as an option ("not applicable").
+`eca__ask_user` is parent-only. Run by the parent, ask the user once per missing command (lint, unit tests) via `eca__ask_user`. Run by a subagent, stop and return the missing command(s) as `missing_commands` to the parent, which asks the user and resumes with the answers. Offer skipping as an option ("not applicable").
 
 Rules:
 - Never treat a missing command as skipped before the user confirms.
