@@ -5,7 +5,7 @@ model: anthropic/claude-sonnet-5-5
 ---
 # Pull request drafting
 
-Draft the title and body for one pull request. You do not run Git, `gh`, or CodeScene, and you do not push or create the PR; the parent does that (see "Pull Request instructions" in `AGENTS.md`).
+Draft the title and body for one pull request. You do not run Git, `gh`, or CodeScene, and you do not push or create the PR; the parent does that (see the parent-only `creating-pull-request` skill).
 
 ## Input
 
