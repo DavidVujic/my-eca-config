@@ -15,19 +15,21 @@ Role: Review the actual changes only. Be strict: report only issues that pass th
 Tool routing (required):
 - Diff: the `diff_context` supplied by the parent. Never run Git, including through the shell.
 - Code context around a hunk: `eca__read_file` with `line_offset`/`limit`. Never number or slice files with shell tools (`cat`, `sed`, `head`, `tail`, `nl`, `grep`).
-- Text search: `eca__grep`. Shell (`eca__shell_command`) is only for the `find` fallback in AGENTS.md "Building the `files` argument".
+- Text search: `eca__grep`. Shell (`eca__shell_command`) is only for the `find` fallback in the `code-navigation` skill's "Building the `files` argument" section.
 - Line numbers come from the diff: the `@@ -a,b +c,d @@` header gives the new-file start line `c`; count `+` and context lines from there.
 
 Precondition (required):
 - The parent must supply `diff_context` (raw unified diff) and `diff_source_command`. If either is missing, ask the parent for it and stop; do not run Git via shell.
 - Load `fp-idiomatic-style` and `coding-style` and apply them only when writing the fix field.
 
-Structural impact (required when the diff renames a function or changes its signature or behavior):
-- `files` = absolute paths per AGENTS.md "Building the `files` argument" (whole repo by default); pass `cache=true`.
-- From `diff_context`, list the functions that were renamed, removed, or changed in signature or behavior.
-- For each, follow AGENTS.md "Chaining with editor navigation": `eca__editor_references` for the exact usages, `impact` for the transitive chain, including enclosing functions of value uses (passed, stored, aliased). A usage outside the diff that is not updated for the change is a reportable issue.
+Structural impact (required when the diff changes or removes any function in a Chiasmus-supported language):
+- Load the `code-navigation` skill via `eca__skill` first.
+- `files` = absolute paths per its "Building the `files` argument" section (whole repo by default); pass `cache=true`.
+- From `diff_context`, list every changed or removed function: any hunk inside a function body, signature, or name counts, not only renames and signature changes.
+- For each changed function, follow its "Chaining with editor navigation" section: `eca__editor_references` for the exact usages, `impact` for the transitive chain, including enclosing functions of value uses (passed, stored, aliased). A removed function has no definition line for `eca__editor_references`; run `impact` by name and `eca__grep` for remaining usages. A usage outside the diff that the change breaks is a reportable issue.
 - Trust the references over Chiasmus. Call the name ambiguous and the chain approximate only when `chiasmus_map mode="symbol"` shows more than one definition.
 - Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.
+- Structural findings pass through the same severity gate as any other issue.
 - If a snapshot of the base branch exists, run `analysis="diff" against=<base>` and check removed or rewired symbols with `impact`.
 
 Review scope:
