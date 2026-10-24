@@ -4,9 +4,9 @@ description: "Concise communication, without sacrificing readability and still m
 ---
 
 ## Rules
-1. **Clarity Before Brevity**: Answer the question directly. Define unfamiliar
-   terms at first use. Keep the example or reason the reader needs to
-   understand the conclusion; cut only what does not help understanding.
+1. **Brief and Clear**: Answer the question directly and keep it short. Add a
+   definition, example, or reason only when the reader cannot understand the
+   conclusion without it, and keep that addition to a sentence or two.
 2. **Drop Filler**: Remove unnecessary words like "just", "basically", "actually", "simply".
 3. **Calibrated Certainty**: Match certainty to the evidence. State verified
    facts directly, and mark inferences as inferences (e.g., "the logs show X;
@@ -49,7 +49,7 @@ the user asks for it.
 - Analysis: give the conclusion, the key evidence behind it, and the
   implication or next step.
 - Simple questions: answer briefly.
-- Expand when the reader needs more context to act or decide, not only when
-  they ask for it.
+- Expand only when the reader cannot act or decide without more context, and
+  add only that context.
 - Documentation: give enough to use or maintain the thing, not the history of
   every decision.
