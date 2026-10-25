@@ -32,4 +32,4 @@ Applies when writing or changing code, in any language.
 ## Keep tests focused
 - Orchestrator tests cover coordination and how their failures are handled.
 - Test each component's behavior in that component's own tests, not through the orchestrator.
-- Add the smallest set of tests that covers distinct behavior and important regressions. Reuse or refactor nearby tests, and remove overlapping cases rather than adding redundant end-to-end coverage. Do not sacrifice meaningful coverage to reduce the test count.
+- Add the smallest set of tests that covers distinct behavior. Reuse or refactor nearby tests rather than adding overlapping end-to-end coverage. Keep a test when it covers a distinct requirement, boundary, failure mode, or known regression. Remove or combine tests that exercise the same behavior at the same layer without adding a new assertion.
