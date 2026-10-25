@@ -40,7 +40,7 @@ Do not use shell `grep`, `cat`, `awk`, `ls`, or shell command chains as substitu
 - After moving code between modules: `analysis="cycles"` and `"layer-violation"` on the touched files.
 - Bug hunt "how does input reach X": `analysis="path" from=<entry> to=<X>`, then read only the functions on the path.
 - Diff / PR review (owned by the `code-review` subagent): `impact` on every changed or removed function. If a snapshot of the base branch exists, run `analysis="diff" against=<base>` first. While working on the base branch, save one with `chiasmus_graph analysis="summary" cache=true save_snapshot=<branch>`; never switch branches to create it.
-- Structural review of a file set (not a diff): `chiasmus_review`, then execute its phases.
+- Broad structural review of a subsystem or file set (not routine diff review): run `chiasmus_review` to select the relevant phases, then execute those phases and inspect the code. It returns a plan, not findings.
 
 ## Formal checks
 
