@@ -31,7 +31,7 @@ Structural impact (required when the diff changes or removes any function in a C
 - Run `analysis="cycles"` on the touched files. A cycle through a changed function is a reportable issue.
 - Structural findings pass through the same severity gate as any other issue.
 - If a snapshot of the base branch exists, run `analysis="diff" against=<base>` and check removed or rewired symbols with `impact`.
-- Optional: if impact and cycle checks leave an architecture, security, or correctness question in a multi-module diff, run `chiasmus_review` with the affected absolute source files and set `focus` to `architecture`, `security`, or `correctness` to match the unanswered question. The tool returns a recipe of checks, not findings; run the checks it recommends that bear on that question. Keep required checks and report only issues on changed lines or unchanged code shown broken by a structural result.
+- Optional (not required for every diff): run `chiasmus_review` only when both hold: the diff changes calls or data flow across two or more modules, and the required impact and cycle checks do not cover a specific architecture, security, or correctness risk. Set `focus` to the matching value (`architecture`, `security`, or `correctness`) and pass the relevant absolute source files. The tool returns a recipe of checks, not findings; run the checks from that recipe that bear on the risk. It does not replace the required checks above. Report only issues on changed lines, or unchanged code that a structural result shows the diff breaks.
 
 Review scope:
 - Comment on added/modified lines in the diff (lines starting with `+`). Unchanged code is admissible only when a structural result shows the diff breaks it.
