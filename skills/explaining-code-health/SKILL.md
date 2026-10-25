@@ -15,7 +15,7 @@ Use this skill when the task is educational or explanatory. The goal is to help 
 - A user asks how to interpret scores or what a better score implies.
 - A stakeholder needs a concise explanation of why Code Health matters.
 
-Do not use this skill when the user needs a quantified ROI projection for a specific file. Use `making-the-business-case-for-code-health` for that.
+Do not use this skill when the user needs a quantified ROI projection for a specific file. Call `codescene__code_health_refactoring_business_case` directly for that.
 
 ## Quick Reference
 
