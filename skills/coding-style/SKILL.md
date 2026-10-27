@@ -30,6 +30,8 @@ Applies when writing or changing code, in any language.
 - Handle errors where they occur. For example, keep rendering errors separate from file-writing errors.
 
 ## Keep tests focused
-- Orchestrator tests cover coordination and how their failures are handled.
-- Test each component's behavior in that component's own tests, not through the orchestrator.
-- Add the smallest set of tests that covers distinct behavior. Reuse or refactor nearby tests rather than adding overlapping end-to-end coverage. Keep a test when it covers a distinct requirement, boundary, failure mode, or known regression. Remove or combine tests that exercise the same behavior at the same layer without adding a new assertion.
+- Add tests sparingly: only the smallest set needed to cover distinct behavior.
+- Prefer lower-level unit tests next to the component that owns the behavior. Add one only for a meaningful, distinct scenario, boundary, or failure mode.
+- Keep higher-level and orchestrator tests narrow and few: coordination, failure handling at that level, and a few representative paths. Do not repeat lower-level scenarios there.
+- Keep each test simple and concise: minimal setup, one clear behavior, one clear expected result. Avoid elaborate fixtures, excessive mocking, and verbose assertions.
+- Keep a test when it covers a distinct requirement or known regression. Remove or combine tests that duplicate each other, at the same layer or across layers, without adding a new assertion.
