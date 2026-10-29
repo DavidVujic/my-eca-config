@@ -94,7 +94,7 @@
         "mistral-large-latest": {
           "extraPayload": { "max_completion_tokens": null }
         },
-        "devstral-latest": { "extraPayload": { "max_completion_tokens": null } }
+        "zai-glm-5-3": { "extraPayload": { "max_completion_tokens": null } }
       }
     }
   },
