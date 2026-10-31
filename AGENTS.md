@@ -18,7 +18,7 @@ When the user asks for a code review / PR review / diff review:
 2. On `error: "NO_DIFF_FOUND"`, reply `{"status":"no_changes"}` with the reported scope, tell the user which untracked paths, if any, were excluded, and do not spawn `code-review`.
 3. Otherwise spawn `code-review` (`agents/code-review.md`) with the raw `diff_context` and the exact `diff_source_command`, and tell the user which untracked paths, if any, were excluded.
 
-After it returns: summarize the findings ("No issues found." if none); spot-check findings that name callers outside the diff with `eca__editor_references` before acting; route critical and high fixes to `implement`; state why for each finding you do not act on, including every medium one; end with actions taken and findings left open.
+After it returns: summarize the findings ("No issues found." if none); spot-check findings that name callers outside the diff with `eca__editor_references` (per `editor-navigation`) before acting; route critical and high fixes to `implement`; state why for each finding you do not act on, including every medium one; end with actions taken and findings left open.
 
 ## PR review comments instructions
 When the user asks to handle review comments on a pull request:
@@ -31,7 +31,7 @@ When the user asks to handle review comments on a pull request:
 - Hand subagents concrete inputs: absolute file paths, the `files` list for Chiasmus, exact lines from the diff, and the acceptance criteria. Do not make them rediscover what you already know.
 - Use the built-in `explorer` subagent for broad codebase reading that would otherwise flood this context; keep the summary, not the raw files.
 - `explorer` is built in (no file under `agents/`); its tool allow-list lives in `config.json`.
-- Treat subagent output as a claim: after `implement`, run `eca__editor_diagnostics`, then QA as in "QA check instructions"; verify `code-review` findings as in "Review instructions"; read `qa-check` failures yourself before deciding the next step.
+- Treat subagent output as a claim: after `implement`, run `eca__editor_diagnostics` when available, then QA as in "QA check instructions"; verify `code-review` findings as in "Review instructions"; read `qa-check` failures yourself before deciding the next step.
 - Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
 - If `implement` reports a user-rejected edit, do not retry automatically. Use the user's existing correction or ask via `eca__ask_user`, then resume the same subagent with the `chat_id` from `spawn_agent`. If it cannot be resumed, spawn a new `implement` with a handoff and the current file state.
 
@@ -78,7 +78,7 @@ AI-touched means any source change made in this chat session; when the origin of
 ## Code navigation instructions
 Applies to the parent agent and every subagent.
 
-- Before the first `eca__editor_definition` or `eca__editor_references` call in a task, load the `editor-navigation` skill via `eca__skill` and follow it. It owns one-hop lookups, line/symbol arguments, retries and fallbacks.
+- Before the first `eca__editor_definition` or `eca__editor_references` call in a task, or the first definition/references lookup when those tools are unavailable, load the `editor-navigation` skill via `eca__skill` and follow it. It owns one-hop lookups, line/symbol arguments, retries and fallbacks.
 - Before the first Chiasmus call in a task, before bulk reads in an unmapped repo or reading a source file over ~600 lines, and before renaming, changing the signature or behavior of, deleting, or moving code in a Chiasmus-supported language (TypeScript, JavaScript, Python, Go, Rust, Clojure, Scheme, Racket, Common Lisp), load the `structural-checks` skill via `eca__skill` and follow it. It owns the map/grep → references → `impact` chain with value-use repair, the `files` argument rules, the required structural uses, and formal checks.
 
 ## Observability and delivery tools
