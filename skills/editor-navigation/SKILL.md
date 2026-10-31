@@ -1,6 +1,6 @@
 ---
 name: editor-navigation
-description: Use before the first eca__editor_definition or eca__editor_references call in a task. Covers one-hop lookups, line/symbol arguments, retries and fallbacks.
+description: Use before the first eca__editor_definition or eca__editor_references call in a task, or before looking up a definition or references when those tools are unavailable. Covers one-hop lookups, line/symbol arguments, retries and fallbacks.
 ---
 
 # Editor Navigation Skill
@@ -19,6 +19,7 @@ Use `eca__editor_definition` and `eca__editor_references` for:
 
 - The implementation behind a call site already in context → `editor_definition`, instead of grepping the name repo-wide.
 - The exact usages to update when changing or renaming a symbol → `editor_references`.
+- If these tools are not in the available tools, do not call them: find the definition with `chiasmus_map mode="symbol"` or `eca__grep`, find references with `eca__grep output_mode="content"`, and label the results textual, not exact.
 
 Both need `path`, a **1-based** `line`, and the `symbol` as it appears on that line, so they refine a location you already have rather than discover one:
 

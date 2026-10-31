@@ -14,12 +14,12 @@ One-hop lookups (`eca__editor_definition`, `eca__editor_references`) are covered
 Chiasmus matches functions by **name** across the whole file set; editor navigation resolves **bindings**. Combine them for any change to an existing symbol:
 
 1. `chiasmus_map mode="symbol" name=<symbol>` — definition line and whether the name is ambiguous. One `eca__grep` for the name (`output_mode="content"`, whole repo) — split the direct hits into direct calls and value uses (passed as an argument, stored in a dict or list, aliased). Do not trace further by hand; that is `impact`'s job.
-2. `eca__editor_references` at the definition line — the exact usages to edit.
+2. `eca__editor_references` at the definition line — the exact usages to edit. Without editor tools, use step 1's grep hits instead and label the chain approximate.
 3. `chiasmus_graph analysis="impact" target=<symbol>` for the direct calls. A value use creates no edge to the target in Python, Go, or Rust (TS/JS and Clojure see bare identifiers passed to calls or known higher-order forms, nothing else), so for each invisible value use run `impact` on the **enclosing function** that receives and calls it.
 4. Report the union as the blast radius, marking which callers came from step 3's repair. Never report a single `impact` result on its own: one missing edge drops every caller above it.
 
 - More than one definition in step 1 means `callers`/`impact` merge unrelated functions: edit from the references list and label the chain approximate.
-- An empty `impact` or `callers` result never proves a function is unused; confirm with `dead-code` and `editor_references`.
+- An empty `impact` or `callers` result never proves a function is unused; confirm with `dead-code` and `editor_references`. Without editor tools, grep hits cannot prove absence; flag it.
 
 ## Building the `files` argument
 
