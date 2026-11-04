@@ -9,6 +9,7 @@ Applies to the parent agent and every subagent.
 
 - File discovery, text search, and file reads: `eca__directory_tree`, `eca__grep`, `eca__read_file` with absolute paths, also for repos outside the workspace. Do not use shell `cd`, `ls`, `grep`, `head` chains for this.
 - Do not probe runtime services or local infrastructure during routine discovery or QA preflight; check the environment only when the user's task requires that information.
+- Focused Python experiments (checking behavior, a library call or a data shape by running code): load the `project-repl` skill via `eca__skill` and use `agent-repl-mcp__run` instead of shell `python -c` or temporary project copies. It does not replace lasting tests, and lint and unit tests stay owned by `qa-check`.
 - When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback in the `structural-checks` skill, a runtime task), make one purpose-specific call; do not chain unrelated commands. Implementation shell stays within `agents/implement.md`: no shell file discovery, search, or reads, no lint or unit tests (owned by `qa-check`), and no Git (parent-only, below).
 - Git and `gh` go through `eca__git`, which only the parent agent has. Every Git and `gh` command is parent-only; subagents never run Git or `gh`, including through the shell. The parent supplies diffs and other Git output to subagents.
 
