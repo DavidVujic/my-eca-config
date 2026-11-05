@@ -28,7 +28,7 @@ WORKFLOW:
 - Lint, unit tests and runtime preflight are owned by `qa-check`; do not run or probe them.
 - Use a service or runtime dependency only when the implementation task itself requires it.
 - Run the structural safety checks described above before editing.
-- When Python behavior is unclear and running code answers it faster than reading, load the `project-repl` skill via `eca__skill` and explore with `agent-repl-mcp__run` before the physical edits; call `agent-repl-mcp__close` when done, also after a failure. REPL experiments are in-memory only and do not replace regression tests.
+- When Python behavior is unclear and running code answers it faster than reading, explore with `agent-repl-mcp__run` before the physical edits. REPL experiments are in-memory only and do not replace source edits or regression tests.
 - Make minimal, correct changes consistent with existing project conventions.
 - Prefer solutions according to the required style policy.
 - Run the Code Health safeguard described above before declaring the work done.
