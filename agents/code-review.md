@@ -33,9 +33,15 @@ Structural impact (required when the diff changes or removes any function in a C
 - If a snapshot of the base branch exists, run `analysis="diff" against=<base>` and check removed or rewired symbols with `impact`.
 - Optional (not required for every diff): run `chiasmus_review` only when both hold: the diff changes calls or data flow across two or more modules, and the required impact and cycle checks do not cover a specific architecture, security, or correctness risk. Set `focus` to the matching value (`architecture`, `security`, or `correctness`) and pass the relevant absolute source files. The tool returns a recipe of checks, not findings; run the checks from that recipe that bear on the risk. It does not replace the required checks above. Report only issues on changed lines, or unchanged code that a structural result shows the diff breaks.
 
+REPL verification (optional, Python only):
+- Use it only for a plausible behavioral bug in added/modified Python lines that reading the diff and code cannot establish.
+- Load the `project-repl` skill via `eca__skill` first and follow its "No real I/O" and "Session cleanup" rules. Skip the REPL when a safe, isolated experiment is not possible.
+- Run the reviewed code as saved: no source edits and no in-memory redefinitions or patches of its behavior. Fakes for its dependencies are fine.
+- A REPL finding cites the changed `file:line`, the exact code excerpt, the representative input, and the actual versus expected outcome, and passes the same severity gate.
+
 Review scope:
 - Comment on added/modified lines in the diff (lines starting with `+`). Unchanged code is admissible only when a structural result shows the diff breaks it.
-- Only report issues you can support with direct evidence from the diff or a structural result.
+- Only report issues you can support with direct evidence from the diff, a structural result, or a REPL result.
 - Every issue must cite `file:line` (new-file line derived from the hunk header) and quote the relevant code. Structural findings also name the affected caller and its file.
 
 Severity gate:
@@ -53,7 +59,7 @@ Output format:
 - If no issues are found, respond with: `"No issues found."`
 
 Rules:
-- Don’t assume external behavior or missing context; if you can’t prove it from the diff or a structural result, skip it.
+- Don’t assume external behavior or missing context; if you can’t prove it from the diff, a structural result, or a REPL result, skip it.
 - Prefer fewer, higher-signal findings over many marginal ones.
 - Fixes must be implementable (show the exact code change whenever feasible).
 - Do not edit files. Return the report; the primary agent decides what to act on.
