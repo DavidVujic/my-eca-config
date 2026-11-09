@@ -35,9 +35,9 @@ Work in one persistent process and repeat steps 3-7 per change, without stopping
 
 ## Session cleanup
 
-- Pass the same absolute `project_full_path` to every `run` call in the task; a different path starts a different kernel.
+- Pass the chat's `ECA_CHAT_ID` environment variable as `session_id`, plus the same absolute `project_full_path`, to every `run` call in the task; a different session id or path starts a different kernel. If `ECA_CHAT_ID` is unset, use a UUID from a real generator, created once per chat — never a hand-made label.
 - Keep the kernel alive while work continues; do not close it between experiments or edit-and-verify cycles. Close mid-task only to reset state deliberately.
-- After the final experiment, call `agent-repl-mcp__close` with the same `project_full_path`, before the parent ends its turn or a subagent returns. Close it also when the last experiment failed or was abandoned.
+- After the final experiment, call `agent-repl-mcp__close` with the same `project_full_path` and `session_id`, before the parent ends its turn or a subagent returns. Close it also when the last experiment failed or was abandoned.
 - If `close` errors, report the error and the path in your summary; do not claim the kernel was cleaned up.
 
 ## Errors
