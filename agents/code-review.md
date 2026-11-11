@@ -1,8 +1,7 @@
 ---
 mode: subagent
 description: Review a git diff / PR with strict severity threshold.
-model: google/gemini-3.1-pro-preview
-variant: low
+model: google/gemini-4-argon
 ---
 # Code review playbook
 
