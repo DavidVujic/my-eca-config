@@ -86,13 +86,13 @@
       "url": "https://api.mistral.ai/v1",
       "keyRc": "api.mistral.ai",
       "models": {
+        "mistral-large-4": {
+          "extraPayload": { "max_completion_tokens": null }
+        },
         "mistral-small-latest": {
           "extraPayload": { "max_completion_tokens": null }
         },
         "mistral-medium": { "extraPayload": { "max_completion_tokens": null } },
-        "mistral-large-latest": {
-          "extraPayload": { "max_completion_tokens": null }
-        },
         "zai-glm-5-3": { "extraPayload": { "max_completion_tokens": null } }
       }
     }
