@@ -24,7 +24,7 @@ After it returns: summarize the findings ("No issues found." if none); spot-chec
 
 ## PR review comments instructions
 When the user asks to handle review comments on a pull request:
-- Fetch them with `eca__git`: `gh pr view <n> --comments --repo <owner>/<repo>` for the conversation and `gh api repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
+- Fetch them with `eca__git`: `gh pr view <n> --comments --repo <owner>/<repo>` for the conversation and `gh api --method GET repos/{owner}/{repo}/pulls/<n>/comments` for inline threads (file, line, body, author).
 - Judge each comment against the code, not the description: read the cited range with `eca__read_file`, resolve the symbol with `eca__editor_definition` (per `editor-navigation`), and check blast radius with `chiasmus_graph analysis="impact"` (per `structural-checks`) before agreeing or disagreeing.
 - Group the outcome per comment: accept (with the planned change), reject (with evidence), or needs clarification.
 - Delegate accepted changes to `implement` in one batch, then repeat the Review instructions (fetch a fresh diff, then rerun `code-review`) on the result.

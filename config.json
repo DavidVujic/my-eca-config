@@ -104,11 +104,12 @@
         "eca__git": {
           "argsMatchers": {
             "command": [
-              "^git\\s+status(\\s|$)",
+              "^git status\\z",
               "^git status --short --branch\\z",
               "^git log -1 --oneline --decorate\\z",
-              "^git\\s+diff(?!.*--no-index)(\\s|$)",
-              "^git diff (?:origin/(?:HEAD|main|master)|main|master)\\.\\.\\.HEAD$",
+              "^git diff\\z",
+              "^git diff --(?: [A-Za-z0-9._-][A-Za-z0-9._/-]*)+\\z",
+              "^git diff (?:origin/(?:HEAD|main|master)|main|master)\\.\\.\\.HEAD\\z",
               "^git diff --merge-base (?:origin/(?:HEAD|main|master)|main|master)\\z",
               "^git diff --merge-base (?:origin/(?:HEAD|main|master)|main|master) --stat\\z",
               "^git diff --cached\\z",
@@ -116,6 +117,9 @@
               "^gh (pr|issue) list\\z",
               "^gh pr view( [0-9]+)?\\z",
               "^gh pr view [0-9]+ --comments --repo [A-Za-z0-9._-]+/[A-Za-z0-9._-]+\\z",
+              "^gh repo view [A-Za-z0-9._-]+/[A-Za-z0-9._-]+\\z",
+              "^gh pr view [0-9]+ --repo [A-Za-z0-9._-]+/[A-Za-z0-9._-]+\\z",
+              "^gh api --method GET repos/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/pulls/[0-9]+/comments(?: --paginate)?\\z",
               "^gh issue view [0-9]+\\z"
             ]
           }
