@@ -178,9 +178,6 @@
     "sentry": {
       "url": "https://mcp.sentry.dev/mcp"
     },
-    "circleci": {
-      "url": "https://mcp.circleci.com/v1/mcp"
-    },
     "agent-python-repl-mcp": {
       "command": "uvx",
       "args": ["agent-repl-mcp"]
@@ -190,7 +187,6 @@
     "chiasmus__chiasmus_(solve|learn|search)",
     "datadog__(?!(get|search|list|find|aggregate|analyze|check)_|monitor_groups_search$|load_datadog_skill$).*",
     "datadog__search_datadog_sdk",
-    "sentry__(add|create|delete|remove|update|onboarding)_.*",
-    "circleci__(cancel|rerun|rollback)_.*"
+    "sentry__(add|create|delete|remove|update|onboarding)_.*"
   ]
 }
