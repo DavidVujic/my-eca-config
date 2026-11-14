@@ -1,0 +1,152 @@
+#+TITLE: The Tools of an Agentic Engineer
+#+AUTHOR: David Vujic
+#+OPTIONS: toc:nil num:nil
+#+STARTUP: inlineimages
+
+ 
+* Agentic Engineering?
+
+
+* Reflections: 9 months of Agentic Engineering
+
+   * Productivity: 10x?
+
+   * Code Quality matters
+
+   * non-AI tools are useful
+
+
+* My current setup
+
+   * Agentic tools
+
+   * Customizations
+
+   * Workflow
+
+
+
+* Agentic tools: in the center
+
+More Agentic Engineering, more Emacs.
+
+#+BEGIN_QUOTE
+"... /The original EMACS (an extensible, full-screen editor)
+was developed in 1976 at the MIT *Artificial Intelligence* Laboratory/ ..."
+#+END_QUOTE
+
+Cool, but why?
+
+* Agentic tools: Eca
+
+   * Provider-agnostic and multi-model support
+
+   * Open source, use in your favorite editor
+
+   * Standards:
+     - AGENTS.md
+     - skills
+     - hooks
+     - sub-agents
+     - client-server architecture
+
+#+BEGIN_QUOTE
+/Using the capabilities of the Code Editor: *LSP*, diagnostics (*lint*, *type checks*)/
+#+END_QUOTE
+[[https://eca.dev/][eca.dev]]
+
+* Reasoning about the code
+
+#+BEGIN_QUOTE
+/...grepping through source files and reconstructing call chains in ad hoc fashion.../
+#+END_QUOTE
+
+
+* Chiasmus
+
+   * map: overview before any bulk reads
+
+   * impact: transitive callers of a changed symbol
+
+#+BEGIN_QUOTE
+/Gives language models access to formal verification/
+#+END_QUOTE
+
+[[https://github.com/yogthos/chiasmus][Chiasmus MCP]]
+
+* Code Quality
+
+#+BEGIN_QUOTE
+/How to keep AI-generated code maintainable?/
+#+END_QUOTE
+
+* CodeScene
+
+   * Code Health
+
+   * Quality Gates
+
+   * No human interaction
+
+Subscription: €8 per month
+
+[[https://codescene.com/product/code-health-mcp
+][Code Health MCP]]
+
+
+* Agent workflows
+
+#+BEGIN_QUOTE
+/Why running these complex shell commands
+and huge chunks of temporary Python scripts all the time?/
+#+END_QUOTE
+
+
+* Agent REPL MCP
+
+   * Gives your agent a *persistent Python REPL*
+
+   * No need for guessing or complex shell calls
+
+
+(I have built this one)
+
+[[https://github.com/DavidVujic/agentic-python-tools#agent-repl-mcp][Agent REPL MCP]]
+
+* Agent workflows
+
+#+BEGIN_QUOTE
+"/I don't understand what you mean./ Simplify."
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+"/This is way, way, way too verbose. Simplify./"
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+"/No need to nest these things here. Simplify./"
+#+END_QUOTE
+
+* Skills
+
+** Coding style
+   * Comments, docstrings, formatting
+
+** FP-idiomatic style
+   * Small composable functions. Lightweight.
+
+** Concise style
+   * Brief and clear. Plain language.
+
+* Thank you!
+
+github.com/davidvujic
+
+davidvujic.blogspot.com
+
+* fin
+  # Local Variables:
+  # eval: (defface my/org-box-border '((t :foreground "#36454F")) "Gray box-drawing borders.")
+  # eval: (font-lock-add-keywords nil '(("[\u2500-\u257F]+" 0 'my/org-box-border prepend)) t)
+  # tab-width: 10
+  # End:
