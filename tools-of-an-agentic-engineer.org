@@ -84,7 +84,7 @@
 
    No human interaction
 
-  Subscription: €8 per month
+  /Subscription: €8 per month/
 
   [[https://codescene.com/product/code-health-mcp][Code Health MCP]]
 
@@ -140,9 +140,7 @@
   (Opus 5.5)
 
     Chiasmus MCP: /when changing existing code/
-
     Agent REPL MCP: /run code, don't guess/
-
     CodeHealth MCP: /the health of touched code/
 
   *QA*
@@ -155,8 +153,7 @@
 
   /Any fixes needed? Go to Implement./
 
-** At home
-  Mistral models (mainly Large 4 and GLM 5.3)
+  /at home: Mistral models (mainly Large 4 and GLM 5.3)/
 
 
 * Extra: working well with the Agentic Workflow
