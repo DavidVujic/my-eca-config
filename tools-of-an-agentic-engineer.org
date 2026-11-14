@@ -3,160 +3,152 @@
 #+OPTIONS: toc:nil num:nil
 #+STARTUP: inlineimages
 
- 
+
 * Agentic Engineering?
 
 
 * Reflections: 9 months of Agentic Engineering
 
-   * Productivity: 10x?
+   Productivity: 10x?
 
-   * Code Quality matters
+   Code Quality
 
-   * non-AI tools are useful
+   non-AI tools
 
 
 * My current setup
 
-   * Agentic tools
+   Agentic tools
 
-   * Customizations
+   Customizations
 
-   * Workflow
+   Workflow
 
 
 
 * Agentic tools: in the center
 
-More Agentic Engineering, more *Emacs*.
+  More Agentic Engineering, more *Emacs*.
 
 #+BEGIN_QUOTE
-"... /was developed in 1976 at the MIT *Artificial Intelligence* Laboratory/ ..."
+  ... /was developed in 1976 at the MIT *Artificial Intelligence* Laboratory/ ...
 #+END_QUOTE
 
-Cool, but why?
+  Cool, but why?
 
 * Agentic tools: Eca
 
-   * Provider-agnostic and multi-model support
+   Provider-agnostic and multi-model support
 
-   * Open source, use in your favorite editor
+   Open source, use in your favorite editor
 
-   * Standards:
-     - AGENTS.md
-     - skills
-     - hooks
-     - sub-agents
-     - client-server architecture
+   Standards:
+     AGENTS.md, skills, hooks, sub-agents
 
 #+BEGIN_QUOTE
-/Using the capabilities of the Code Editor: *LSP*, diagnostics (*lint*, *type checks*)/
+  /Using the capabilities of the Code Editor: *LSP*, diagnostics (*lint*, *type checks*)/
 #+END_QUOTE
-[[https://eca.dev/][eca.dev]]
+
+  [[https://eca.dev/][eca.dev]]
 
 * Reasoning about the code
 
 #+BEGIN_QUOTE
-/...grepping through source files and reconstructing call chains in ad hoc fashion.../
+  /...grepping through source files and reconstructing call chains in ad hoc fashion.../
 #+END_QUOTE
 
 
 * Chiasmus
 
-   * map: overview before any bulk reads
+   map: overview before any bulk reads
 
-   * impact: transitive callers of a changed symbol
+   impact: transitive callers of a changed symbol
 
 #+BEGIN_QUOTE
-/Gives language models access to formal verification/
+  /Gives language models access to formal verification/
 #+END_QUOTE
 
-[[https://github.com/yogthos/chiasmus][Chiasmus MCP]]
+  [[https://github.com/yogthos/chiasmus][Chiasmus MCP]]
 
 * Code Quality
 
 #+BEGIN_QUOTE
-/How to keep AI-generated code maintainable?/
+  /How to keep AI-generated code maintainable?/
 #+END_QUOTE
 
 * CodeScene
 
-   * Code Health
+   Code Health
 
-   * Quality Gates
+   Quality Gates
 
-   * No human interaction
+   No human interaction
 
-Subscription: €8 per month
+  Subscription: €8 per month
 
-[[https://codescene.com/product/code-health-mcp
-][Code Health MCP]]
+  [[https://codescene.com/product/code-health-mcp][Code Health MCP]]
 
 
 * Agent workflows
 
 #+BEGIN_QUOTE
-/Why running these complex shell commands
-and huge chunks of temporary Python scripts all the time?/
+  /Why running these complex shell commands
+  and huge chunks of temporary Python scripts all the time?/
 #+END_QUOTE
 
 
 * Agent REPL MCP
 
-   * Gives your agent a *persistent Python REPL*
+   Gives your agent a *persistent Python REPL*
 
-   * No need for guessing or complex shell calls
+   No need for guessing or complex shell calls
 
 
-(I have built this one)
+  (I have built this one)
 
-[[https://github.com/DavidVujic/agentic-python-tools#agent-repl-mcp][Agent REPL MCP]]
+  [[https://github.com/DavidVujic/agentic-python-tools#agent-repl-mcp][Agent REPL MCP]]
 
 * Agent workflows
 
 #+BEGIN_QUOTE
-"/I don't understand what you mean./ Simplify."
-#+END_QUOTE
+  /I don't understand what you mean. Simplify/.
 
-#+BEGIN_QUOTE
-"/This is way, way, way too verbose. Simplify./"
-#+END_QUOTE
+  /This is way, way, *WAY* too verbose. Simplify./
 
-#+BEGIN_QUOTE
-"/No need to nest these things here. Simplify./"
+  /No need to nest these things here. Simplify./
 #+END_QUOTE
 
 * Skills
 
 ** Coding style
-   * Comments, docstrings, formatting
+   Comments, docstrings, formatting
 
 ** FP-idiomatic style
-   * Small composable functions. Lightweight.
+   Small composable functions. Lightweight.
 
 ** Concise style
-   * Brief and clear. Plain language.
+   Brief and clear. Plain language.
 
 * Agent collaboration: subagents
 
   *Plan*
   (GPT-6 Sol)
 
-    * Chiasmus MCP: /maps paths, checks impact/
+    Chiasmus MCP: /maps paths, checks impact/
 
   *Implement*
   (Opus 5.5)
 
-    * Chiasmus MCP: /when changing existing code/
+    Chiasmus MCP: /when changing existing code/
 
-    * Agent REPL MCP: /run code, don't guess/
+    Agent REPL MCP: /run code, don't guess/
 
-    * CodeHealth MCP: /the health of touched code/
+    CodeHealth MCP: /the health of touched code/
 
   *QA*
   (Sonnet 5)
 
-    * CodeHealh MCP -> /Any fixes needed? Go to Implement/.
+    CodeHealh MCP -> /Any fixes needed? Go to Implement/.
 
   *Review*
   (Gemini 4 Argon)
@@ -170,7 +162,7 @@ and huge chunks of temporary Python scripts all the time?/
 * Extra: working well with the Agentic Workflow
 
 ** Monorepo
-   * *Polylith*
+   *Polylith*
 
      /a Human and Agent-friendly Monorepo setup/
 
@@ -178,9 +170,9 @@ and huge chunks of temporary Python scripts all the time?/
 
 * Thank you!
 
-github.com/davidvujic
+  github.com/davidvujic
 
-davidvujic.blogspot.com
+  davidvujic.blogspot.com
 
 * fin
   # Local Variables:
