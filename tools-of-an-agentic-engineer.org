@@ -28,11 +28,10 @@
 
 * Agentic tools: in the center
 
-More Agentic Engineering, more Emacs.
+More Agentic Engineering, more *Emacs*.
 
 #+BEGIN_QUOTE
-"... /The original EMACS (an extensible, full-screen editor)
-was developed in 1976 at the MIT *Artificial Intelligence* Laboratory/ ..."
+"... /was developed in 1976 at the MIT *Artificial Intelligence* Laboratory/ ..."
 #+END_QUOTE
 
 Cool, but why?
@@ -138,6 +137,45 @@ and huge chunks of temporary Python scripts all the time?/
 ** Concise style
    * Brief and clear. Plain language.
 
+* Agent collaboration: subagents
+
+  *Plan*
+  (GPT-6 Sol)
+
+    * Chiasmus MCP: /maps paths, checks impact/
+
+  *Implement*
+  (Opus 5.5)
+
+    * Chiasmus MCP: /when changing existing code/
+
+    * Agent REPL MCP: /run code, don't guess/
+
+    * CodeHealth MCP: /the health of touched code/
+
+  *QA*
+  (Sonnet 5)
+
+    * CodeHealh MCP -> /Any fixes needed? Go to Implement/.
+
+  *Review*
+  (Gemini 4 Argon)
+
+  /Any fixes needed? Go to Implement./
+
+** At home
+  Mistral models (mainly Large 4 and GLM 5.3)
+
+
+* Extra: working well with the Agentic Workflow
+
+** Monorepo
+   * *Polylith*
+
+     /a Human and Agent-friendly Monorepo setup/
+
+     /includes agent skills/
+
 * Thank you!
 
 github.com/davidvujic
@@ -146,7 +184,4 @@ davidvujic.blogspot.com
 
 * fin
   # Local Variables:
-  # eval: (defface my/org-box-border '((t :foreground "#36454F")) "Gray box-drawing borders.")
-  # eval: (font-lock-add-keywords nil '(("[\u2500-\u257F]+" 0 'my/org-box-border prepend)) t)
-  # tab-width: 10
   # End:
