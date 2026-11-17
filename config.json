@@ -145,7 +145,12 @@
         "chiasmus__chiasmus_formalize": {},
         "chiasmus__chiasmus_verify": {},
         "chiasmus__chiasmus_lint": {},
-        "chiasmus__chiasmus_review": {}
+        "chiasmus__chiasmus_review": {},
+        "agent-python-checks-mcp__start_watching": {},
+        "agent-python-checks-mcp__lint": {},
+        "agent-python-checks-mcp__typecheck": {},
+        "agent-python-checks-mcp__test": {},
+        "agent-python-checks-mcp__stop_watching": {}
       },
       "deny": {
         "eca__read_file": {

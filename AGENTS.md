@@ -11,7 +11,7 @@ Applies to the parent agent and every subagent.
 - Do not probe runtime services or local infrastructure during routine discovery or QA preflight; check the environment only when the user's task requires that information.
 - REPL-driven Python work (reproducing behavior, trying a change against representative inputs, then verifying the saved implementation in the same live process): load the `project-repl` skill via `eca__skill` and use `agent-repl-mcp__run` instead of shell `python -c` or temporary project copies. REPL experiments replace application I/O (databases, files, network, subprocesses, queues, services) with fakes or mocks and never touch real external resources; when that is not safely possible, ask the user first. Skip it for documentation, config, or trivial changes. It does not replace lasting tests, and lint and unit tests stay owned by `qa-check`.
 - REPL session cleanup: reuse the same absolute `project_full_path` for every `agent-repl-mcp__run` call in the task, and do not close the kernel between experiments or edit-and-verify cycles. After the final experiment, call `agent-repl-mcp__close` with that same path before the parent ends its turn or a subagent returns.
-- When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback in the `structural-checks` skill, a runtime task), make one purpose-specific call; do not chain unrelated commands. Implementation shell stays within `agents/implement.md`: no shell file discovery, search, or reads, no lint or unit tests (owned by `qa-check`), and no Git (parent-only, below).
+- When shell is needed (implementation, documented lint/unit-test commands, the Chiasmus `find` fallback in the `structural-checks` skill, a runtime task), make one purpose-specific call; do not chain unrelated commands. Implementation shell stays within `agents/implement.md`: no shell file discovery, search, or reads, no lint or unit tests (owned by `qa-check`), and no Git (parent-only, below). This does not restrict the `implement` subagent's `agent-python-checks-mcp` calls, which give early lint, typecheck and test feedback and do not replace `qa-check`.
 - Git and `gh` go through `eca__git`, which only the parent agent has. Every Git and `gh` command is parent-only; subagents never run Git or `gh`, including through the shell. The parent supplies diffs and other Git output to subagents.
 
 ## Review instructions
@@ -35,7 +35,7 @@ When the user asks to handle review comments on a pull request:
 - `explorer` is built in (no file under `agents/`); its tool allow-list lives in `config.json`.
 - Treat subagent output as a claim: after `implement`, run `eca__editor_diagnostics` when available, then QA as in "QA check instructions"; verify `code-review` findings as in "Review instructions"; read `qa-check` failures yourself before deciding the next step.
 - Do not redo a subagent's work in the main context; if the result is unusable, respawn with the missing input.
-- If `implement` reports a user-rejected edit, do not retry automatically. Use the user's existing correction or ask via `eca__ask_user`, then resume the same subagent with the `chat_id` from `spawn_agent`. If it cannot be resumed, spawn a new `implement` with a handoff and the current file state.
+- If `implement` reports a user-rejected edit, do not retry automatically. Use the user's existing correction or ask via `eca__ask_user`, then resume the same subagent with the `chat_id` from `spawn_agent` and the same `project_full_path` and `session_id`. If it cannot be resumed, spawn a new `implement` with a handoff, the current file state, and a new `session_id` (see "Implementation instructions").
 
 ## Changes summary instructions
 When the user asks for a changes summary, run the `git-changes-context` skill with `eca__git` in `branch` mode (`worktree` only when the user asks about uncommitted changes). On `NO_DIFF_FOUND`, reply `{"status":"no_changes"}` and do not spawn the subagent; otherwise spawn `changes-summary` (`agents/changes-summary.md`) with the raw `diff_context` and `diff_source_command`.
@@ -60,8 +60,14 @@ When the user asks to create a commit or uses the `/commit` command, load the `c
 ## Implementation instructions
 Delegate all implementation work to the `implement` subagent (`agents/implement.md`): implementing a plan, writing code, refactoring, applying changes, creating or editing files, and writing or modifying tests.
 
+Pass two values with every `implement` task, including resumed ones, for its `agent-python-checks-mcp` session:
+- `project_full_path`: the absolute root of the target project. If you do not know it, ask the user; never fabricate a path.
+- `session_id`: one stable id for the implementation session, shared by its `agent-python-checks-mcp` and `agent-repl-mcp` calls. Before spawning, read your own chat's `ECA_CHAT_ID` environment variable (`printenv ECA_CHAT_ID`) and pass it; if it is unset, generate a UUIDv4 once with a real generator in one shell call (`uuidgen`, lowercased with `tr 'A-Z' 'a-z'`), never typed by hand. Sessions active at the same time need distinct ids: for a concurrent `implement` session in this chat, or while a previous session with that id has not stopped its checks session and closed its REPL, generate a fresh UUIDv4 instead. A later sequential session may reuse your chat's id after the previous one has cleaned up. When resuming the same subagent with its `chat_id`, pass the same `project_full_path` and `session_id` again.
+
+`implement` starts the session first, runs lint, typecheck and test through the MCP before it returns, and stops the session. Those results are early feedback; afterwards still run `qa-check` independently, as in "QA check instructions".
+
 ## QA check instructions
-When the user asks to check code changes, or after `implement` changed code, run the `qa-check` subagent (`agents/qa-check.md`) for lint and unit tests before considering the work complete; the `qa-check` skill owns command resolution.
+When the user asks to check code changes, or after `implement` changed code, run the `qa-check` subagent (`agents/qa-check.md`) for lint and unit tests before considering the work complete, even when `implement` reported passing MCP checks; the `qa-check` skill owns command resolution.
 
 Subagents have no `eca__ask_user`: for each missing command `qa-check` returns, ask the user once via `eca__ask_user`, offering "not applicable", then resume the same subagent with the `chat_id` from `spawn_agent` and the answers (or spawn a new `qa-check` with them). Mark a check skipped only when the user chose "not applicable".
 
