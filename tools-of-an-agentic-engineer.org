@@ -54,7 +54,11 @@
 * Reasoning about the code
 
 #+BEGIN_QUOTE
-  /...grepping through source files and reconstructing call chains in ad hoc fashion.../
+  /...grepping through source files/
+
+  /...ad hoc call chains/
+
+  /Is there a better way?/
 #+END_QUOTE
 
 
@@ -89,7 +93,7 @@
   [[https://codescene.com/product/code-health-mcp][Code Health MCP]]
 
 
-* Agent workflows
+* Agent implementation work
 
 #+BEGIN_QUOTE
   /Why running these complex shell commands
