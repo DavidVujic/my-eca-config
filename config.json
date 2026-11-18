@@ -163,7 +163,10 @@
       "args": ["-y", "chiasmus"]
     },
     "codescene": {
-      "command": "cs-mcp"
+      "command": "cs-mcp",
+      "env": {
+        "CS_DISABLE_SETUP_HINT": "true"
+      }
     },
     "datadog": {
       "command": "$HOME/.local/bin/datadog_mcp_cli",
