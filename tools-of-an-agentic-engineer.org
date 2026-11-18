@@ -26,7 +26,7 @@
 
 
 
-* Agentic tools: in the center
+* My Code Editor: in the center
 
   More Agentic Engineering, more *Emacs*.
 
