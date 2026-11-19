@@ -184,6 +184,10 @@
     "agent-python-repl-mcp": {
       "command": "uvx",
       "args": ["agent-repl-mcp"]
+    },
+    "agent-python-checks-mcp": {
+      "command": "uvx",
+      "args": ["agent-checks-mcp"]
     }
   },
   "disabledTools": [
