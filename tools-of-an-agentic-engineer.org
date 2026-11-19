@@ -110,6 +110,7 @@
 
   (I have built this one)
 
+  [[~/Desktop/agent-repl-mcp-demo.mov][Demo]]
   [[https://github.com/DavidVujic/agentic-python-tools#agent-repl-mcp][Agent REPL MCP]]
 
 * Agent workflows
