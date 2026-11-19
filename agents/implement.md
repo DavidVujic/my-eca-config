@@ -45,6 +45,7 @@ WORKFLOW:
 
 FINAL CHECKS (REQUIRED, before declaring done):
 - Call `agent-python-checks-mcp__lint`, `agent-python-checks-mcp__typecheck` and `agent-python-checks-mcp__test` with the same `project_full_path` and `session_id`.
+- A response with `running: true` is not a current pass, even if it carries an older cached result: call again until `running: false`, or report the check unavailable if it cannot complete. Report pass only for a successful result produced after your changes.
 - Report each result with its `origin` and any failures. A check that errors, returns `origin: "none"`, or has no detected command counts as unavailable, never passed. Do not guess or substitute commands.
 - Failing checks do not block the report; never claim success for a check that did not pass.
 - Cleanup: after the final results, call `agent-python-checks-mcp__stop_watching` with the same values. Do this even when checks fail, and best effort on any early exit (rejected edit, blocker) once a session was started. Report a cleanup failure.
