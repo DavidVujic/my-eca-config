@@ -105,6 +105,7 @@
           "argsMatchers": {
             "command": [
               "^git status\\z",
+              "^git status --short\\z",
               "^git status --short --branch\\z",
               "^git log -1 --oneline --decorate\\z",
               "^git diff\\z",
