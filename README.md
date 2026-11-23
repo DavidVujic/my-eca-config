@@ -15,8 +15,8 @@ Each flow reads: command → `AGENTS.md` section → skills the parent loads →
 - `/review` → "Review instructions" → `git-changes-context` (worktree) → `code-review` (loads `editor-navigation`, `structural-checks`, `fp-idiomatic-style`, `coding-style`).
 - `/commit` → "Commit instructions" → `commit` skill + `safeguarding-ai-generated-code` → `commit` subagent (drafts the message only).
 - `/pr` → "Pull Request instructions" → `creating-pull-request` + `git-changes-context` (branch) + `safeguarding-ai-generated-code` → `pull-request` subagent (drafts title and body only).
-- Check requests → "Code check instructions" → parent calls `agent-python-checks-mcp` lint, typecheck and test on demand (no subagent).
-- Implementation requests → "Implementation instructions" → parent passes `project_full_path` and a stable `session_id` (shared with REPL calls) → `implement` (starts an `agent-python-checks-mcp` session first; loads `fp-idiomatic-style`, `coding-style`, `editor-navigation`, `structural-checks`, `safeguarding-ai-generated-code`; runs MCP lint, typecheck and test, then stops the session). Its check results are final; no second check run follows.
+- Check requests → "Code check instructions" → `agent-checks` → parent calls the requested `agent-python-checks-mcp` checks on demand (no watcher, no subagent).
+- Implementation requests → "Implementation instructions" → parent passes `project_full_path` and a stable `session_id` (shared with REPL calls) → `implement` (loads `agent-checks` first and starts its checks session; loads `fp-idiomatic-style`, `coding-style`, `editor-navigation`, `structural-checks`, `safeguarding-ai-generated-code`; runs MCP lint, typecheck and test, then stops the session). Its check results are final; no second check run follows.
 
 ## Naming
 The same name can be a command, a skill, and a subagent (`commit`). "Load X via `eca__skill`" always means the skill; "spawn X" always means the subagent.

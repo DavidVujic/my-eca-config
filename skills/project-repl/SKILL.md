@@ -48,4 +48,4 @@ Work in one persistent process and repeat steps 3-7 per change, without stopping
 ## Limits
 
 - The REPL does not replace lasting regression tests; add or update tests in the project when behavior changes.
-- It does not replace the required lint, typecheck and tests, which run through `agent-python-checks-mcp`.
+- It does not replace the required lint, typecheck and tests, which run through `agent-python-checks-mcp` per the `agent-checks` skill; that skill shares this skill's `session_id`.
