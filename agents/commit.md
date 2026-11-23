@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Draft a conventional commit message from a parent-supplied staged diff.
-model: anthropic/claude-sonnet-5-5
+model: mistral/mistral-small-latest
 ---
 # Commit message drafting
 

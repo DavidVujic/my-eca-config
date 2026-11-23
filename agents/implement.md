@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Implement planned changes by editing code in the repo; uses functional-leaning, idiomatic style and lightweight data structures.
-model: anthropic/claude-opus-5-5
+model: mistral/zai-glm-5-3
 ---
 
 CHECKS SESSION STARTUP (REQUIRED, FIRST STEP):

@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Review a git diff / PR with strict severity threshold.
-model: google/gemini-4-argon
+model: mistral/mistral-large-4
 ---
 # Code review playbook
 

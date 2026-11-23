@@ -1,5 +1,5 @@
 {
-  "defaultModel": "openai/gpt-6.2-sol",
+  "defaultModel": "mistral/mistral-large-4",
   "agent": {
     "code": {
       "variant": "medium"

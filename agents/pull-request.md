@@ -1,7 +1,7 @@
 ---
 mode: subagent
 description: Draft a pull request title and body from a parent-supplied branch diff.
-model: anthropic/claude-sonnet-5-5
+model: mistral/mistral-small-latest
 ---
 # Pull request drafting
 
