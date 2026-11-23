@@ -108,6 +108,7 @@
               "^git status --short --branch\\z",
               "^git log -1 --oneline --decorate\\z",
               "^git diff\\z",
+              "^git diff --stat\\z",
               "^git diff --(?: [A-Za-z0-9._-][A-Za-z0-9._/-]*)+\\z",
               "^git diff (?:origin/(?:HEAD|main|master)|main|master)\\.\\.\\.HEAD\\z",
               "^git diff --merge-base (?:origin/(?:HEAD|main|master)|main|master)\\z",
@@ -122,6 +123,11 @@
               "^gh api --method GET repos/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/pulls/[0-9]+/comments(?: --paginate)?\\z",
               "^gh issue view [0-9]+\\z"
             ]
+          }
+        },
+        "eca__shell_command": {
+          "argsMatchers": {
+            "command": ["^printenv ECA_CHAT_ID\\z"]
           }
         },
         "eca__directory_tree": {},
@@ -150,7 +156,8 @@
         "agent-python-checks-mcp__lint": {},
         "agent-python-checks-mcp__typecheck": {},
         "agent-python-checks-mcp__test": {},
-        "agent-python-checks-mcp__stop_watching": {}
+        "agent-python-checks-mcp__stop_watching": {},
+        "agent-python-repl-mcp__close": {}
       },
       "deny": {
         "eca__read_file": {
