@@ -33,7 +33,7 @@ Leave all changes unstaged in the working tree for the user's review.
 
 WORKFLOW:
 - Tool routing per `AGENTS.md` "Tool routing": ECA tools for discovery, search and reads with absolute paths and bounded ranges; shell only for implementation execution and the Chiasmus `find` fallback.
-- Use the `agent-python-checks-mcp` tools for early lint, typecheck and test feedback (see FINAL CHECKS). Do not run lint or unit-test commands through the shell or probe runtime preflight; the parent's independent `qa-check` run owns those after you return.
+- Use the `agent-python-checks-mcp` tools for lint, typecheck and test (see FINAL CHECKS). Do not run lint or test commands through the shell or probe runtime preflight.
 - Use a service or runtime dependency only when the implementation task itself requires it.
 - Run the structural safety checks described above before editing.
 - When Python behavior is unclear and running code answers it faster than reading, explore with `agent-repl-mcp__run` before the physical edits. REPL experiments are in-memory only and do not replace source edits or regression tests.
@@ -54,4 +54,4 @@ OUTPUT:
 - Provide exact code patches or file edits (as your usual workflow expects).
 - Report affected callers and any cycle/layer findings from the structural safety checks.
 - Report the safeguard outcome (pass / regression / tool unavailable) and its findings in your final summary.
-- Report the checks session: startup outcome, `lint` / `typecheck` / `test` results (pass / fail with failures / unavailable), and cleanup outcome. These are early feedback only; the parent's `qa-check` run stays the independent QA result.
+- Report the checks session: startup outcome, `lint` / `typecheck` / `test` results (pass / fail with failures / unavailable), and cleanup outcome.
