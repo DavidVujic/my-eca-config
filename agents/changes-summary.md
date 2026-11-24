@@ -2,7 +2,6 @@
 mode: subagent
 description: Summarize a parent-supplied git diff in <= 3 sentences focusing on what and why.
 model: google/gemini-4-argon
-variant: low
 ---
 # Changes summary playbook
 

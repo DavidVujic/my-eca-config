@@ -32,48 +32,24 @@
       "keyRc": "generativelanguage.googleapis.com",
       "models": {
         "gemini-4-carbon": {
-          "variants": {
-            "low": {
-              "extra_body": {
-                "google": {
-                  "thinking_config": {
-                    "thinking_level": "low",
-                    "include_thoughts": true
-                  }
-                }
-              }
-            },
-            "high": {
-              "extra_body": {
-                "google": {
-                  "thinking_config": {
-                    "thinking_level": "high",
-                    "include_thoughts": true
-                  }
+          "extraPayload": {
+            "extra_body": {
+              "google": {
+                "thinking_config": {
+                  "include_thoughts": true,
+                  "thinking_level": "high"
                 }
               }
             }
           }
         },
         "gemini-4-argon": {
-          "variants": {
-            "low": {
-              "extra_body": {
-                "google": {
-                  "thinking_config": {
-                    "thinking_level": "low",
-                    "include_thoughts": true
-                  }
-                }
-              }
-            },
-            "medium": {
-              "extra_body": {
-                "google": {
-                  "thinking_config": {
-                    "thinking_level": "medium",
-                    "include_thoughts": true
-                  }
+          "extraPayload": {
+            "extra_body": {
+              "google": {
+                "thinking_config": {
+                  "include_thoughts": true,
+                  "thinking_level": "medium"
                 }
               }
             }
