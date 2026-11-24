@@ -182,11 +182,7 @@
       }
     },
     "datadog": {
-      "command": "$HOME/.local/bin/datadog_mcp_cli",
-      "args": [
-        "--endpoint-path",
-        "v1/mcp?toolsets=core,alerting,error-tracking"
-      ]
+      "url": "https://mcp.datadoghq.com/v1/mcp?toolsets=core,alerting,error-tracking"
     },
     "linear": {
       "url": "https://mcp.linear.app/mcp"
