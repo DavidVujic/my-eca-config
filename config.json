@@ -1,5 +1,5 @@
 {
-  "defaultModel": "openai/gpt-6-sol",
+  "defaultModel": "openai/gpt-6.2-sol",
   "agent": {
     "code": {
       "variant": "medium"
